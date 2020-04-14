@@ -3,28 +3,48 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class LoginFrame extends JFrame implements ActionListener {
-	Container container=getContentPane();
-    JLabel userLabel=new JLabel("USERNAME");
-    JLabel passwordLabel=new JLabel("PASSWORD");
-    JTextField userTextField=new JTextField();
-    JPasswordField passwordField=new JPasswordField();
-    JButton loginButton=new JButton("LOGIN");
-    JButton resetButton=new JButton("RESET");
-	JCheckBox showPassword=new JCheckBox("Show Password");
+class LoginPage {
+	private JFrame frame;
+	private Container container;
+    private JLabel userLabel;
+    private JLabel passwordLabel;
+    private JTextField userTextField;
+    private JPasswordField passwordField;
+    private JButton loginButton;
+    private JButton resetButton;
+	private JCheckBox showPassword;
 	
-	LoginFrame()
+	LoginPage()
     {
+		initialize();
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
         addActionEvent();//calling addActionEvent() method
- 
-    }
+	}
+
+	private void initialize() {
+		frame = new JFrame();
+		container = frame.getContentPane();
+		userLabel=new JLabel("USERNAME");
+		passwordLabel=new JLabel("PASSWORD");
+		userTextField=new JTextField();
+		passwordField=new JPasswordField();
+		loginButton=new JButton("LOGIN");
+		resetButton=new JButton("RESET");
+		showPassword=new JCheckBox("Show Password");
+
+		frame.setTitle("Welcome to Temporal Database");
+		frame.setVisible(true);
+		frame.setBounds(10,10,370,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
 	public void setLayoutManager()
 	{
 		container.setLayout(null);
 	}
+
 	public void setLocationAndSize()
 	{
 		userLabel.setBounds(50,150,100,30);
@@ -37,6 +57,7 @@ class LoginFrame extends JFrame implements ActionListener {
 	
 	
 	}
+
 	public void addComponentsToContainer()
 	{
 		container.add(userLabel);
@@ -51,42 +72,40 @@ class LoginFrame extends JFrame implements ActionListener {
 	public void addActionEvent()
 	{
 		//adding Action listener to components
-		loginButton.addActionListener(this);
-		resetButton.addActionListener(this);
-		showPassword.addActionListener(this);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == loginButton) {
-			String userText;
-            String pwdText;
-            userText = userTextField.getText();
-            pwdText = passwordField.getText();
-            if (userText.equalsIgnoreCase("username") && pwdText.equalsIgnoreCase("password")) {
-                JOptionPane.showMessageDialog(this, "Login Successful");
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+		loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {     
+                String userText;
+				String pwdText;
+				userText = userTextField.getText();
+				pwdText = passwordField.getText();
+				if (userText.equalsIgnoreCase("username") && pwdText.equalsIgnoreCase("password")) {
+					frame.setVisible(false);
+					DDLPage ddl = new DDLPage();
+				} else {
+					JOptionPane.showMessageDialog(frame, "Invalid Username or Password");
+				}
             }
-		} else if (e.getSource() == resetButton) {
-			userTextField.setText("");
-            passwordField.setText("");
-		} else if (e.getSource() == showPassword) {
-			if (showPassword.isSelected()) {
-				passwordField.setEchoChar((char) 0);
-			} else {
-				passwordField.setEchoChar('*');
-			}
-		}
+		});
+		
+		resetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {     
+				userTextField.setText("");
+            	passwordField.setText("");
+            }
+		});
+		
+		showPassword.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {     
+				if (showPassword.isSelected()) {
+					passwordField.setEchoChar((char) 0);
+				} else {
+					passwordField.setEchoChar('*');
+				}
+            }
+        });
 	}
-}
 
-public class LoginPage {
 	public static void main(String args[]) {
-		LoginFrame frame = new LoginFrame();
-		frame.setTitle("Welcome to Temporal Database");
-		frame.setVisible(true);
-		frame.setBounds(10,10,370,600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		LoginPage page = new LoginPage();
 	}
 }

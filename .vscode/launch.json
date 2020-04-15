@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LoginPage",
+            "request": "launch",
+            "mainClass": "LoginPage",
+            "projectName": "Temporal-Database_24438cbc"
+        }
+    ]
+}

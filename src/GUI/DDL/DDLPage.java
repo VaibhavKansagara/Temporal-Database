@@ -11,7 +11,6 @@ class DDLPage {
     private JButton Dropbtn;
     private JButton Alterbtn;
     private JButton Truncatebtn;
-    private JButton Renamebtn;
     private JButton Commentbtn;
     private JButton Backbtn;
 
@@ -33,7 +32,6 @@ class DDLPage {
         Dropbtn = new JButton("Drop");
         Alterbtn = new JButton("Alter");
         Truncatebtn = new JButton("Truncate");
-        Renamebtn = new JButton("Rename");
         Commentbtn = new JButton("Comment");
         Backbtn = new JButton("Back");
 
@@ -61,12 +59,6 @@ class DDLPage {
             }          
         });
 
-        Renamebtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               RenamePage rnm = new RenamePage();
-            }          
-        });
-
         Commentbtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 CommentPage cmt = new CommentPage();
@@ -83,7 +75,6 @@ class DDLPage {
         controlPanel.add(Dropbtn);
         controlPanel.add(Alterbtn);
         controlPanel.add(Truncatebtn);
-        controlPanel.add(Renamebtn);
         controlPanel.add(Commentbtn);
         controlPanel.add(Backbtn);
 

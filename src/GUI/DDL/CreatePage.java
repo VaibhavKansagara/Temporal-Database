@@ -25,7 +25,7 @@ class CreatePage {
     static ArrayList<JComboBox<String>> type_list = new ArrayList<JComboBox<String>>();
     static ArrayList<JTextField> length_list= new ArrayList<JTextField>();
     static ArrayList<JCheckBox> not_null_list= new ArrayList<JCheckBox>();
-    static ArrayList<JCheckBox> primarykey_list= new ArrayList<JCheckBox>();
+    static ArrayList<JRadioButton> primarykey_list= new ArrayList<JRadioButton>();
     static ArrayList<JComboBox<String>> referencing_list = new ArrayList<JComboBox<String>>();
     static ArrayList<JCheckBox> temporal_list= new ArrayList<JCheckBox>();
 
@@ -64,6 +64,7 @@ class CreatePage {
 
         OK.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
+               ButtonGroup grp=new ButtonGroup();
                 if(Attr_no.getText().trim().length()>0){
                     int num=Integer.parseInt(Attr_no.getText());
                     for(i=0;i<num;i++){
@@ -85,9 +86,10 @@ class CreatePage {
                         not_null.setBounds(380,175+(40*i),50,20);
                         not_null_list.add(not_null);
                         
-                        JCheckBox primarykey=new JCheckBox();
+                        JRadioButton primarykey=new JRadioButton();
                         primarykey.setBounds(500,175+(40*i),50,20);
                         primarykey_list.add(primarykey);
+                        grp.add(primarykey);
                         
                         String[] arr2={"NONE"};
                         JComboBox<String> referencing= new JComboBox<>(arr2);
@@ -116,7 +118,7 @@ class CreatePage {
 				// execute sql query.
 				JTextArea query= new JTextArea();
 				//query.setBackground(Color.RED);
-				query.setBounds(30,300+(40*i),400,200);
+				query.setBounds(785,30,400,3000);
 				String first_line = "CREATE "+"TABLE " + tablename.getText() +"\n";
 				query.append(first_line);
 				query.append("(\n");
@@ -141,7 +143,20 @@ class CreatePage {
 				
 				String last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+"\n";
 				query.append(last_line);
-				query.append(");");
+                query.append(");");
+                query.append("\n\n");
+                for(int i=0;i<name_list.size();i++){
+                    if(temporal_list.get(i).isSelected()){
+                        String s1="CREATE TABLE "+ name_list.get(i).getText()+"_hist\n";
+                        query.append(s1);
+                        query.append("(\n");
+                        String s2="valid_start_time DATETIME DEFAULT NOW()\n";
+                        String s3="valid_end_time NULL\n";
+                        query.append(s2);
+                        query.append(s3);
+                        query.append(");\n\n");
+                    }
+                }
 				//for(int i=0;i<temporal_attributes.size();i++){
 
 				//}

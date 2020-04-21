@@ -2,7 +2,7 @@
 Class for connecting to the database and for extracting information out
 of the database and performing various database operations.
 */
-
+package DDL;
 import java.sql.*;
 import java.util.*;
 
@@ -28,12 +28,22 @@ public class Database {
 	    // Open a connection to the database
 	    connection = DriverManager.getConnection(DB_URL, username, password);
 	} catch (ClassNotFoundException e) {
-	    System.println("Driver Not Found: " + e);
+	    System.out.println("Driver Not Found: " + e);
 	} catch (SQLException e) {
-	    System.println("SQL Exception: " + e);
+	    System.out.println("SQL Exception: " + e);
         }
     }
+	public void create_table(String query){
+		System.out.println("hello");
+		try{
+			stmt = connection.prepareStatement(query);
+			stmt.executeUpdate();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 
+	}
     public ArrayList<String> get_tables() {
 	ArrayList<String> tables = new ArrayList<String>();
 	String sql_query = "select table_name FROM information_schema.tables where table_type = 'BASE TABLE' "
@@ -42,8 +52,8 @@ public class Database {
         try {
 	    stmt = connection.prepareStatement(sql_query);
 	    ResultSet rs = stmt.executeQuery();
-	    while(re.next()) {
-		tables.add(rs.get_String("TABLE_NAME"));
+	    while(rs.next()) {
+		tables.add(rs.getString("TABLE_NAME"));
 	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -52,14 +62,14 @@ public class Database {
     }
     
     public Map<String,String> get_Columns(String tblname) {
-	Map<String,String> columns = new Map<String,String>();
+	Map<String,String> columns = new 	HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
 		    + "table_schema = " + dbname + " and table_name = " + tblname;
 
         try {
 	    stmt = connection.prepareStatement(sql_query);
 	    ResultSet rs = stmt.executeQuery();
-	    while(rs.next) {
+	    while(rs.next()) {
 		columns.put(rs.getString("COLUMN_NAME"), rs.getString("COLUMN_TYPE"));
 	    }
 	} catch (SQLException e) {
@@ -69,7 +79,7 @@ public class Database {
     }
 
     public Map<String,String> get_primary_key(String tblname) {
-	Map<String,String> pk = new Map<String,String>();
+	Map<String,String> pk = new HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
 		    + "table_schema = " + dbname + " and table_name = " + tblname
 		    + " column_key = 'PRI'";
@@ -77,7 +87,7 @@ public class Database {
         try {
 	    stmt = connection.prepareStatement(sql_query);
 	    ResultSet rs = stmt.executeQuery();
-	    while(rs.next) {
+	    while(rs.next()) {
 		pk.put(rs.getString("COLUMN_NAME"), rs.getString("COLUMN_TYPE"));
 	    }
 	} catch (SQLException e) {
@@ -146,14 +156,14 @@ public class Database {
     public void copy_table(String tblname, String tbl_hist) {
 	String sql_string = "INSERT INTO " + tbl_hist + " SELECT * FROM " + tblname;
 	try {
-		stmt = connection.prepareStatement(sql_query);
+		stmt = connection.prepareStatement(sql_string);
 		stmt.execute(); 
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
     }
 
-    public insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger insert_after_" + tblname + " after insert "
 			  + "on " + tblname + " "
 			  + "for each row "
@@ -191,7 +201,7 @@ public class Database {
 	} 
     }
 
-    public update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger update_after_" + tblname + " after update "
 			  + "on " + tblname + " "
 			  + "for each row "
@@ -242,7 +252,7 @@ public class Database {
 	}
     }
 
-    public delete_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void delete_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger delete_after_" + tblname + " after delete "
 			  + "on " + tblname + " "
 			  + "for each row "
@@ -269,9 +279,8 @@ public class Database {
 
     public void close_connection() {
 	try {
-	    if (connection) {
 		connection.close();
-	    }
+	    
 	} catch (Exception e) {
 	    e.printStackTrace();
 	} 

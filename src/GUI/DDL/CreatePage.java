@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import DDL.*;
 class CreatePage {
     static JFrame frame;
     static JLabel TableName;
@@ -28,7 +28,7 @@ class CreatePage {
     static ArrayList<JRadioButton> primarykey_list= new ArrayList<JRadioButton>();
     static ArrayList<JComboBox<String>> referencing_list = new ArrayList<JComboBox<String>>();
     static ArrayList<JCheckBox> temporal_list= new ArrayList<JCheckBox>();
-
+    static ArrayList<String> query_list= new ArrayList<String>();
     public CreatePage() {
         frame= new JFrame("New Table");
         frame.setBounds(400,400,900,800);
@@ -115,13 +115,15 @@ class CreatePage {
 		GenerateQuery.setBounds(30,215+(40*i),150,20);
 		GenerateQuery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {     
-				// execute sql query.
+                // execute sql query.
+                String main_table="";
 				JTextArea query= new JTextArea();
 				//query.setBackground(Color.RED);
 				query.setBounds(785,30,400,3000);
-				String first_line = "CREATE "+"TABLE " + tablename.getText() +"\n";
-				query.append(first_line);
-				query.append("(\n");
+                String first_line = "CREATE "+"TABLE " + tablename.getText() +"\n"+"(\n";
+                main_table=main_table+first_line;
+				//query.append(first_line);
+				//query.append("(\n");
 				String keys="(";
 				for(int i=0;i<name_list.size();i++){
 					String nnull="";
@@ -134,27 +136,35 @@ class CreatePage {
 					nnull="NOT NULL";
 					}
 					String s=name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+"("+length_list.get(i).getText()+") "+ nnull+ PK+"\n";
-					query.append(s);
-				}
+                    main_table=main_table+s;
+                }
 				
 				int ind = keys.lastIndexOf(',');
 				keys = keys.substring(0,ind);
 				keys=keys+") ";
 				
-				String last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+"\n";
-				query.append(last_line);
-                query.append(");");
-                query.append("\n\n");
+                String last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+"\n"+");"+"\n\n";
+                main_table=main_table+last_line;
+                query_list.add(main_table);
+                query.append(main_table);
+				//query.append(last_line);
+                //query.append(");");
+                //query.append("\n\n");
+                String hist_table="";
                 for(int i=0;i<name_list.size();i++){
                     if(temporal_list.get(i).isSelected()){
                         String s1="CREATE TABLE "+ name_list.get(i).getText()+"_hist\n";
-                        query.append(s1);
-                        query.append("(\n");
+                        hist_table=hist_table+s1+"(\n";
+                        //query.append(s1);
+                        //query.append("(\n");
                         String s2="valid_start_time DATETIME DEFAULT NOW()\n";
                         String s3="valid_end_time NULL\n";
-                        query.append(s2);
-                        query.append(s3);
-                        query.append(");\n\n");
+                        hist_table=hist_table+s2+s3+");\n\n";
+                        //query.append(s2);
+                        //query.append(s3);
+                        //query.append(");\n\n");
+                        query_list.add(hist_table);
+                        query.append(hist_table);
                     }
                 }
 				//for(int i=0;i<temporal_attributes.size();i++){
@@ -164,17 +174,19 @@ class CreatePage {
 			}
         	});
         
-        //ExecuteQuery= new JButton("Execute Query");
-        //ExecuteQuery.setBounds(200,215+(40*i),150,20);
-        //ExecuteQuery.addActionListener(new ActionListener() {
-            //public void actionPerformed(ActionEvent e) {     
-               // execute sql query. 
-               //System.out.println("hello");          
-            //}
-        //});
+        ExecuteQuery= new JButton("Execute Query");
+        ExecuteQuery.setBounds(200,215+(40*i),150,20);
+        ExecuteQuery.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {     
+            Database db= new Database("root","","EMP");
+            for(int i=0;i<query_list.size();i++){
+                db.create_table(query_list.get(i));
+            }       
+        }
+        });
 
         	c.add(GenerateQuery);
-        	// c.add(ExecuteQuery);
+        	c.add(ExecuteQuery);
             }
         });
         
@@ -192,4 +204,5 @@ class CreatePage {
 	c.add(Temporal);
 	c.add(OK);
     }
+    
 }

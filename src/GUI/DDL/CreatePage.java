@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import Backend.Database;
+import Backend.DDL.Database;
 
 class CreatePage {
     static JFrame frame;

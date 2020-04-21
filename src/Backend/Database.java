@@ -2,7 +2,7 @@
 Class for connecting to the database and for extracting information out
 of the database and performing various database operations.
 */
-package DDL;
+package Backend;
 import java.sql.*;
 import java.util.*;
 

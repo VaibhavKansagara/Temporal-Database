@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import DDL.*;
+import Backend.Database;
+
 class CreatePage {
     static JFrame frame;
     static JLabel TableName;

@@ -98,12 +98,13 @@ public class Database {
 	    }
 	}
 
-	sql_query += ", VALID_START_DATE DATETIME DEFAULT NOW() VALID_END_TIME DATETIME )";
+	sql_query += ", VALID_START_DATE DATETIME DEFAULT NOW() VALID_END_DATE DATETIME )";
 
 	try {
 	    stmt = connection.prepareStatement(sql_query);
 	    stmt.execute();
-	    // copy the values from table to tbl_hist. 
+	    // copy the values from table to tbl_hist.
+	    copy_table(tblname, tbl_hist);
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    return false;
@@ -137,9 +138,133 @@ public class Database {
 	try {
 	    stmt = connection.prepareStatement(sql_query);
 	    stmt.execute(); 
-	    } catch (SQLException e) {
+	} catch (SQLException e) {
 		e.printStackTrace();
-	    }
+	}
+    }
+
+    public void copy_table(String tblname, String tbl_hist) {
+	String sql_string = "INSERT INTO " + tbl_hist + " SELECT * FROM " + tblname;
+	try {
+		stmt = connection.prepareStatement(sql_query);
+		stmt.execute(); 
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+    }
+
+    public insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+	String sql_query = "create trigger insert_after_" + tblname + " after insert "
+			  + "on " + tblname + " "
+			  + "for each row "
+			  + "begin "
+			  + "insert into " + tbl_hist + "( ";
+	boolean first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += e.getKey();
+		} else {
+			sql_query += ", " + e.getKey();
+		}
+	}
+
+	sql_query +=  ") values( ";
+	
+	first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += "new." + e.getKey();
+		} else {
+			sql_query += ", new." + e.getKey();
+		}
+	}
+
+	sql_query +=  "); END";
+
+	try {
+		stmt = connection.prepareStatement(sql_query);
+		stmt.execute(); 
+	} catch (SQLException e) {
+		e.printStackTrace();
+	} 
+    }
+
+    public update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+	String sql_query = "create trigger update_after_" + tblname + " after update "
+			  + "on " + tblname + " "
+			  + "for each row "
+			  + "begin update " + tbl_hist + " "
+			  + "set VALID_END_DATE = NOW() where ";
+
+	boolean first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += e.getKey() + " = old." + e.getKey();
+		} else {
+			sql_query += " and " + e.getKey() + " = old." + e.getKey();
+		}
+	}
+	sql_query += " and VALID_END_DATE is null; ";
+	
+	// Now insert into the hist_table
+	sql_query += "insert into " + tbl_hist + "( ";
+	first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += e.getKey();
+		} else {
+			sql_query += ", " + e.getKey();
+		}
+	}
+
+	sql_query +=  ") values( ";
+	
+	first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += "new." + e.getKey();
+		} else {
+			sql_query += ", new." + e.getKey();
+		}
+	}
+
+	sql_query +=  "); END";
+	try {
+		stmt = connection.prepareStatement(sql_query);
+		stmt.execute(); 
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+    }
+
+    public delete_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+	String sql_query = "create trigger delete_after_" + tblname + " after delete "
+			  + "on " + tblname + " "
+			  + "for each row "
+			  + "begin update " + tbl_hist + " "
+			  + "set VALID_END_DATE = NOW() where ";
+
+	boolean first = true;
+	for (Map.Entry<String,String> e: colmns.entrySet()) {
+		if (first) {
+			first = false;
+			sql_query += e.getKey() + " = old." + e.getKey();
+		} else {
+			sql_query += " and " + e.getKey() + " = old." + e.getKey();
+		}
+	}
+	sql_query += " and VALID_END_DATE is null; END";
+	try {
+		stmt = connection.prepareStatement(sql_query);
+		stmt.execute(); 
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
     }
 
     public void close_connection() {

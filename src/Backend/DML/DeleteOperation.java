@@ -12,6 +12,26 @@ public class DeleteOperation {
 	stmt = p;
     }
 
+    public static delete() {
+	String sql_query = "delete from " + tblname + " where ";
+	boolean first = true;
+        for (Map.Entry<String,String> e: colmns.entrySet()) {
+            if (first) {
+                first = false;
+                sql_query += e.getKey() + "='" + e.getValue() + "'";
+            } else {
+                sql_query += " and " + e.getKey() + "='" + e.getValue() + "'";
+            }
+        }
+
+	try {
+	    stmt = connection.prepareStatement(sql_query);
+	    stmt.execute(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+    }
+
     public static void delete_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger delete_after_" + tblname + " after delete "
 			  + "on " + tblname + " "

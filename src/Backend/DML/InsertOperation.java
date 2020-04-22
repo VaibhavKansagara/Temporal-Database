@@ -12,6 +12,38 @@ public class InsertOperation {
 	stmt = p;
     }
     
+    public static void insert(Map<String,String> colmns, String tblname) {
+	String sql_query = "insert into " + tblname + "(";
+	boolean first = true;
+        for (Map.Entry<String,String> e: colmns.entrySet()) {
+            if (first) {
+                first = false;
+                sql_query += e.getKey();
+            } else {
+                sql_query += ", " + e.getKey();
+            }
+        }
+
+	sql_query +=  ") values( ";
+	first = true;
+        for (Map.Entry<String,String> e: colmns.entrySet()) {
+            if (first) {
+                first = false;
+                sql_query += e.getValue();
+            } else {
+                sql_query += ", " + e.getValue();
+            }
+	}
+	sql_query +=  ")";
+
+	try {
+	    stmt = connection.prepareStatement(sql_query);
+	    stmt.execute(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+    }
+
     public static void insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
         String sql_query = "create trigger insert_after_" + tblname + " after insert "
                   + "on " + tblname + " "

@@ -12,6 +12,36 @@ public class UpdateOperation {
 	stmt = p;
     }
 
+    public static void update(Map<String,String> key,Map<String,String> colmns, String tblname) {
+	String sql_query = "update " + tblname + " set ";
+	boolean first = true;
+        for (Map.Entry<String,String> e: colmns.entrySet()) {
+            if (first) {
+                first = false;
+                sql_query += e.getKey() + "='" + e.getValue() + "'";
+            } else {
+                sql_query += ", " + e.getKey() + "='" + e.getValue() + "'";
+            }
+        }
+	sql_query += " where ";
+	first = true;
+        for (Map.Entry<String,String> e: key.entrySet()) {
+            if (first) {
+                first = false;
+                sql_query += e.getKey() + "='" + e.getValue() + "'";
+            } else {
+                sql_query += " and " + e.getKey() + "='" + e.getValue() + "'";
+            }
+	}
+
+	try {
+	    stmt = connection.prepareStatement(sql_query);
+	    stmt.execute(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+    }
+
     public static void update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger update_after_" + tblname + " after update "
 			  + "on " + tblname + " "

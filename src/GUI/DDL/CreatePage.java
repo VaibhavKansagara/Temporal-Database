@@ -5,7 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.*;
 import Backend.Database;
+import Backend.DDL.CreateOperation;
 
 class CreatePage {
     static JFrame frame;
@@ -31,7 +34,7 @@ class CreatePage {
     static ArrayList<JRadioButton> primarykey_list= new ArrayList<JRadioButton>();
     static ArrayList<JComboBox<String>> referencing_list = new ArrayList<JComboBox<String>>();
     static ArrayList<JCheckBox> temporal_list= new ArrayList<JCheckBox>();
-    static ArrayList<String> query_list= new ArrayList<String>();
+    String main_table="";
     public CreatePage() {
         frame= new JFrame("New Table");
         frame.setBounds(400,400,900,800);
@@ -75,7 +78,7 @@ class CreatePage {
                         name.setBounds(30,175+(40*i),100,20);
                         name_list.add(name);
                         
-                        String[] arr={"STRING","CHARACTER","VARCHAR","INTEGER","SMALLINT","BIGINT","REAL","DOUBLE","DECIMAL","DATE","TIME","TIMESTAMP"};
+                        String[] arr={"CHAR","VARCHAR","INTEGER","SMALLINT","BIGINT","REAL","DOUBLE","DECIMAL","DATE","TIME","TIMESTAMP"};
                         JComboBox<String> type= new JComboBox<>(arr);
                         type.setEditable(true);
                         type.setBounds(150,175+(40*i),90,20);
@@ -119,7 +122,7 @@ class CreatePage {
 		GenerateQuery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {     
                 // execute sql query.
-                String main_table="";
+                
 				JTextArea query= new JTextArea();
 				//query.setBackground(Color.RED);
 				query.setBounds(785,30,400,3000);
@@ -138,7 +141,7 @@ class CreatePage {
 					if(PK=="" && not_null_list.get(i).isSelected()){
 					nnull="NOT NULL";
 					}
-					String s=name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+"("+length_list.get(i).getText()+") "+ nnull+ PK+"\n";
+					String s=name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+"("+length_list.get(i).getText()+") "+ nnull+ PK+","+"\n";
                     main_table=main_table+s;
                 }
 				
@@ -148,28 +151,10 @@ class CreatePage {
 				
                 String last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+"\n"+");"+"\n\n";
                 main_table=main_table+last_line;
-                query_list.add(main_table);
                 query.append(main_table);
 				//query.append(last_line);
                 //query.append(");");
                 //query.append("\n\n");
-                String hist_table="";
-                for(int i=0;i<name_list.size();i++){
-                    if(temporal_list.get(i).isSelected()){
-                        String s1="CREATE TABLE "+ name_list.get(i).getText()+"_hist\n";
-                        hist_table=hist_table+s1+"(\n";
-                        //query.append(s1);
-                        //query.append("(\n");
-                        String s2="valid_start_time DATETIME DEFAULT NOW()\n";
-                        String s3="valid_end_time NULL\n";
-                        hist_table=hist_table+s2+s3+");\n\n";
-                        //query.append(s2);
-                        //query.append(s3);
-                        //query.append(");\n\n");
-                        query_list.add(hist_table);
-                        query.append(hist_table);
-                    }
-                }
 				//for(int i=0;i<temporal_attributes.size();i++){
 
 				//}
@@ -181,10 +166,19 @@ class CreatePage {
         ExecuteQuery.setBounds(200,215+(40*i),150,20);
         ExecuteQuery.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {     
-            Database db= new Database("root","","EMP");
-            for(int i=0;i<query_list.size();i++){
-                db.create_table(query_list.get(i));
-            }       
+            Database db= new Database("srikar","Srikar@1829","EMP");
+            CreateOperation op= new CreateOperation(db);
+            op.create_table(main_table);
+            Map<String,String> cols = new HashMap<String,String>();
+            for(int i=0;i<name_list.size();i++){
+                if(temporal_list.get(i).isSelected()){
+                    cols.put(name_list.get(i).getText(),String.valueOf(type_list.get(i).getSelectedItem()));
+                }
+            }
+            String hist_table= tablename.getText()+"_hist";
+            if(op.create_hist_table(tablename.getText(),hist_table,cols)){
+                System.out.println("history table created");
+            }  
         }
         });
 

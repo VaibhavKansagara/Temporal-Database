@@ -6,21 +6,19 @@ import java.util.*;
 import Backend.DML.DeleteOperation;
 import Backend.DML.InsertOperation;
 import Backend.DML.UpdateOperation;
+import Backend.Database;
 
 public class CreateOperation {
-    private static Connection connection = null;
-    private static PreparedStatement stmt = null;
+    PreparedStatement stmt=null;
     private static Database db;
 
-    public CreateOperation(Connection c, PreparedStatement p, Database database) {
-	connection = c;
-	stmt = p;
-	db = db;
+    public CreateOperation(Database database) {
+		db = database;
     }
 
     public void create_table(String query){
 	try{
-	    stmt = connection.prepareStatement(query);
+	    stmt = db.get_connection().prepareStatement(query);
 	    stmt.executeUpdate();
 	}
 	catch (SQLException e) {
@@ -40,13 +38,13 @@ public class CreateOperation {
 	    }
 	}
 
-	sql_query += ", VALID_START_DATE DATETIME DEFAULT NOW() VALID_END_DATE DATETIME )";
+	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
 
 	try {
-	    stmt = connection.prepareStatement(sql_query);
+	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute();
 	    // copy the values from table to tbl_hist.
-	    db.copy_table(tblname, tbl_hist);
+	    db.copy_table(tblname, tbl_hist,colmns);
 	    InsertOperation.insert_trigger(tblname, tbl_hist, colmns);
 	    UpdateOperation.update_trigger(tblname, tbl_hist, colmns);
 	    DeleteOperation.delete_trigger(tblname, tbl_hist, colmns);

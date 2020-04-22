@@ -86,15 +86,40 @@ public class Database {
 	return pk;
     }
 
-    public void copy_table(String tblname, String tbl_hist) {
-	String sql_string = "INSERT INTO " + tbl_hist + " SELECT * FROM " + tblname;
+    public void copy_table(String tblname, String tbl_hist,Map<String,String> colmns) {
+	String sql_string = "INSERT INTO " + tbl_hist + "(";
+	boolean first=true;
+	for(Map.Entry<String,String> e: colmns.entrySet()){
+		if(first){
+			first=false;
+			sql_string+=e.getKey();
+		}
+		else{
+			sql_string+= ", "+ e.getKey();
+		}
+	}
+	sql_string +=") SELECT ";
+	first=true;
+	for(Map.Entry<String,String> e: colmns.entrySet()){
+		if(first){
+			first=false;
+			sql_string+=e.getKey();
+		}
+		else{
+			sql_string+= ", "+ e.getKey();
+		}
+	}
+	sql_string+=" FROM "+ tblname;
 	try {
 		stmt = connection.prepareStatement(sql_string);
 		stmt.execute(); 
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-    }
+	}
+	public Connection get_connection(){
+		return connection;
+	}
 
     public void close_connection() {
 	try {

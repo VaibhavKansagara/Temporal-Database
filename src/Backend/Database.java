@@ -86,39 +86,6 @@ public class Database {
 	return pk;
     }
 
-    public void addFKconstraint(String ref_tblname, String tblname, Map<String,String> pk, Map<String,String> colmns) {
-	String sql_query = "ALTER TABLE " + ref_tblname + "ADD FOREIGN KEY(";
-	boolean first = true;
-	for (Map.Entry<String,String> e: pk.entrySet()) {
-	    if (first) {
-		first = false;
-		sql_query += e.getKey();
-	    } else {
-		sql_query += "," + e.getKey();
-	    }
-	}
-	sql_query += ") REFERENCES " + tblname + "(";
-	first = true;
-	for (Map.Entry<String,String> e: pk.entrySet()) {
-	    if (first) {
-		first = false;
-		sql_query += e.getKey();
-	    } else {
-		sql_query += "," + e.getKey();
-	    }
-	}
-	sql_query += ")";
-	try {
-	    stmt = connection.prepareStatement(sql_query);
-	    stmt.execute();
-	    insert_trigger(tblname, ref_tblname, colmns);
-	    update_trigger(tblname, ref_tblname, colmns);
-	    delete_trigger(tblname, ref_tblname, colmns);
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-    }
-
     public void copy_table(String tblname, String tbl_hist) {
 	String sql_string = "INSERT INTO " + tbl_hist + " SELECT * FROM " + tblname;
 	try {

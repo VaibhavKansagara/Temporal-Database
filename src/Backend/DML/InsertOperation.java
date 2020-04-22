@@ -4,15 +4,15 @@ import java.sql.*;
 import java.util.*;
 
 public class InsertOperation {
-    private Connection connection = null;
-    private PreparedStatement stmt = null;
+    private static Connection connection = null;
+    private static PreparedStatement stmt = null;
 
     public InsertOperation(Connection c, PreparedStatement p) {
 	connection = c;
 	stmt = p;
     }
-
-    public void insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    
+    public static void insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
         String sql_query = "create trigger insert_after_" + tblname + " after insert "
                   + "on " + tblname + " "
                   + "for each row "

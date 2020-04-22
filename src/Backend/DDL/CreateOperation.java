@@ -3,17 +3,22 @@ package Backend.DDL;
 import java.sql.*;
 import java.util.*;
 
-public class CreateOperation {
-    private Connection connection = null;
-    private PreparedStatement stmt = null;
+import Backend.DML.DeleteOperation;
+import Backend.DML.InsertOperation;
+import Backend.DML.UpdateOperation;
 
-    public CreateOperation(Connection c, PreparedStatement p) {
+public class CreateOperation {
+    private static Connection connection = null;
+    private static PreparedStatement stmt = null;
+    private static Database db;
+
+    public CreateOperation(Connection c, PreparedStatement p, Database database) {
 	connection = c;
 	stmt = p;
+	db = db;
     }
 
     public void create_table(String query){
-	System.out.println("hello");
 	try{
 	    stmt = connection.prepareStatement(query);
 	    stmt.executeUpdate();
@@ -41,7 +46,10 @@ public class CreateOperation {
 	    stmt = connection.prepareStatement(sql_query);
 	    stmt.execute();
 	    // copy the values from table to tbl_hist.
-	    copy_table(tblname, tbl_hist);
+	    db.copy_table(tblname, tbl_hist);
+	    InsertOperation.insert_trigger(tblname, tbl_hist, colmns);
+	    UpdateOperation.update_trigger(tblname, tbl_hist, colmns);
+	    DeleteOperation.delete_trigger(tblname, tbl_hist, colmns);
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    return false;

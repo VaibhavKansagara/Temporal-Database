@@ -4,15 +4,15 @@ import java.sql.*;
 import java.util.*;
 
 public class UpdateOperation {
-    private Connection connection = null;
-    private PreparedStatement stmt = null;
+    private static Connection connection = null;
+    private static PreparedStatement stmt = null;
 
     public UpdateOperation(Connection c, PreparedStatement p) {
 	connection = c;
 	stmt = p;
     }
 
-    public void update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public static void update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
 	String sql_query = "create trigger update_after_" + tblname + " after update "
 			  + "on " + tblname + " "
 			  + "for each row "

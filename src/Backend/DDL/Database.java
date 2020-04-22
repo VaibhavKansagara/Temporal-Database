@@ -123,7 +123,7 @@ public class Database {
 	return true;
     }
 
-    public void addFKconstraint(String ref_tblname, String tblname, Map<String,String> pk) {
+    public void addFKconstraint(String ref_tblname, String tblname, Map<String,String> pk, Map<String,String> colmns) {
 	String sql_query = "ALTER TABLE " + ref_tblname + "ADD FOREIGN KEY(";
 	boolean first = true;
 	for (Map.Entry<String,String> e: pk.entrySet()) {
@@ -147,7 +147,10 @@ public class Database {
 	sql_query += ")";
 	try {
 	    stmt = connection.prepareStatement(sql_query);
-	    stmt.execute(); 
+	    stmt.execute();
+	    insert_trigger(tblname, ref_tblname, colmns);
+	    update_trigger(tblname, ref_tblname, colmns);
+	    delete_trigger(tblname, ref_tblname, colmns);
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}

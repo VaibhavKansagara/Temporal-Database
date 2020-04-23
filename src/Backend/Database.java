@@ -5,20 +5,20 @@ of the database and performing various database operations.
 package Backend;
 import java.sql.*;
 import java.util.*;
-
+//import Backend.DML.InsertOperation;
 public class Database {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private String DB_URL = "jdbc:mysql://localhost";
-    private Connection connection = null;
-    PreparedStatement stmt = null;
+    private static Connection connection = null;
+    private static PreparedStatement stmt = null;
     private String username;
     private String password;
-    private String dbname;
+    private static String dbname;
 
-    public Database(String username, String password, String dbname) {
+    public Database(String username, String password, String database_name) {
 	this.username = username;
 	this.password = password;
-	this.dbname = dbname;
+	dbname = database_name;
 	DB_URL = DB_URL + "/" + dbname;
 
 	try {
@@ -51,7 +51,7 @@ public class Database {
         return tables;
     }
     
-    public Map<String,String> get_Columns(String tblname) {
+    public static Map<String,String> get_Columns(String tblname) {
 	Map<String,String> columns = new 	HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
 		    + "table_schema = " + dbname + " and table_name = " + tblname;
@@ -126,7 +126,14 @@ public class Database {
 		connection.close();
 	    
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    e.printStackTrace(); 
 	} 
-    }
+	}
+	public static void main(String args[]){
+		Map<String,String> columns=new HashMap<String,String>();
+		columns.putAll(get_Columns("employee"));
+		for(Map.Entry<String,String> e: columns.entrySet()){
+			System.out.println(e.getKey());
+		}
+	}
 }

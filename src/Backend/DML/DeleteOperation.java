@@ -2,30 +2,29 @@ package Backend.DML;
 
 import java.sql.*;
 import java.util.*;
-
+import Backend.Database;
 public class DeleteOperation {
-    private static Connection connection = null;
+    //private static Connection connection = null;
     private static PreparedStatement stmt = null;
-
-    public DeleteOperation(Connection c, PreparedStatement p) {
-	connection = c;
-	stmt = p;
+	private static Database db;
+    public DeleteOperation(Database database) {
+		db=database;
     }
 
-    public static delete() {
+    public static void delete(Map<String,Object> colmns, String tblname) {
 	String sql_query = "delete from " + tblname + " where ";
 	boolean first = true;
-        for (Map.Entry<String,String> e: colmns.entrySet()) {
+        for (Map.Entry<String,Object> e: colmns.entrySet()) {
             if (first) {
                 first = false;
-                sql_query += e.getKey() + "='" + e.getValue() + "'";
+                sql_query += e.getKey() + "='" + ((String)e.getValue()) + "'";
             } else {
-                sql_query += " and " + e.getKey() + "='" + e.getValue() + "'";
+                sql_query += " and " + e.getKey() + "='" + ((String)e.getValue()) + "'";
             }
         }
 
 	try {
-	    stmt = connection.prepareStatement(sql_query);
+	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute(); 
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -50,7 +49,7 @@ public class DeleteOperation {
 	}
 	sql_query += " and VALID_END_DATE is null; END";
 	try {
-		stmt = connection.prepareStatement(sql_query);
+		stmt = db.get_connection().prepareStatement(sql_query);
 		stmt.execute(); 
 	} catch (SQLException e) {
 		e.printStackTrace();

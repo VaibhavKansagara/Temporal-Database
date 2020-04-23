@@ -2,20 +2,19 @@ package Backend.DML;
 
 import java.sql.*;
 import java.util.*;
-
+import Backend.Database;
 public class InsertOperation {
-    private static Connection connection = null;
+    //private static Connection connection = null;
     private static PreparedStatement stmt = null;
-
-    public InsertOperation(Connection c, PreparedStatement p) {
-	connection = c;
-	stmt = p;
+    private static Database db;
+    public InsertOperation(Database database) {
+        db=database;
     }
     
-    public static void insert(Map<String,String> colmns, String tblname) {
+    public static void insert(Map<String,Object> colmns, String tblname) {
 	String sql_query = "insert into " + tblname + "(";
 	boolean first = true;
-        for (Map.Entry<String,String> e: colmns.entrySet()) {
+        for (Map.Entry<String,Object> e: colmns.entrySet()) {
             if (first) {
                 first = false;
                 sql_query += e.getKey();
@@ -26,18 +25,18 @@ public class InsertOperation {
 
 	sql_query +=  ") values( ";
 	first = true;
-        for (Map.Entry<String,String> e: colmns.entrySet()) {
+        for (Map.Entry<String,Object> e: colmns.entrySet()) {
             if (first) {
                 first = false;
-                sql_query += e.getValue();
+                sql_query += ((String)e.getValue());
             } else {
-                sql_query += ", " + e.getValue();
+                sql_query += ", " + ((String)e.getValue());
             }
 	}
 	sql_query +=  ")";
 
 	try {
-	    stmt = connection.prepareStatement(sql_query);
+	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute(); 
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -75,10 +74,19 @@ public class InsertOperation {
         sql_query +=  "); END";
 
         try {
-            stmt = connection.prepareStatement(sql_query);
+            stmt = db.get_connection().prepareStatement(sql_query);
             stmt.execute(); 
         } catch (SQLException e) {
             e.printStackTrace();
         } 
     }
+    public static void main(String args[]){
+        Map <String,Object> row= new HashMap<String,Object>();
+        row.put("EMP_ID", "123");
+        row.put("EMP_NAME","ABC");
+        row.put("EMP_ADDR","home");
+        row.put("EMP_PHN","1234567890");
+        String tbl="employee";
+        insert(row,tbl);
+   }
 }

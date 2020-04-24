@@ -34,6 +34,9 @@ class CreatePage {
     static ArrayList<JRadioButton> primarykey_list= new ArrayList<JRadioButton>();
     static ArrayList<JComboBox<String>> referencing_list = new ArrayList<JComboBox<String>>();
     static ArrayList<JCheckBox> temporal_list= new ArrayList<JCheckBox>();
+    static ArrayList<String> temporal_columns=new ArrayList<String>();
+    static ArrayList<String> length_string_list=new ArrayList<String>();
+    static ArrayList<String> temporal_columns2=new ArrayList<String>();
     String main_table="";
     public CreatePage() {
         frame= new JFrame("New Table");
@@ -130,19 +133,24 @@ class CreatePage {
                 main_table=main_table+first_line;
 				//query.append(first_line);
 				//query.append("(\n");
-				String keys="(";
-				for(int i=0;i<name_list.size();i++){
+                String keys="(";
+               for(int i=0;i<name_list.size();i++){
 					String nnull="";
-					String PK="";
+                    String PK="";
+                    String length_string=" ";
 					if(primarykey_list.get(i).isSelected()){
 						PK="NOT NULL "+ "UNIQUE ";
 						keys=keys+name_list.get(i).getText()+", ";
 					}
 					if(PK=="" && not_null_list.get(i).isSelected()){
 					nnull="NOT NULL";
-					}
-					String s=name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+"("+length_list.get(i).getText()+") "+ nnull+ PK+","+"\n";
+                    }
+                    if(type_list.get(i).getSelectedItem()=="CHAR" || type_list.get(i).getSelectedItem()=="VARCHAR"){
+                        length_string="("+length_list.get(i).getText()+") ";
+                    }
+					String s=name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+length_string+ nnull+ PK+","+"\n";
                     main_table=main_table+s;
+                    length_string_list.add(length_string);
                 }
 				
 				int ind = keys.lastIndexOf(',');
@@ -176,7 +184,13 @@ class CreatePage {
                 }
             }
             String hist_table= tablename.getText()+"_hist";
-            if(op.create_hist_table(tablename.getText(),hist_table,cols)){
+            for(int i=0;i<temporal_list.size();i++){
+                if(temporal_list.get(i).isSelected()){
+                    temporal_columns.add(name_list.get(i).getText()+" "+type_list.get(i).getSelectedItem()+length_string_list.get(i));
+                    temporal_columns2.add(name_list.get(i).getText());
+                }
+            }
+            if(temporal_columns.size()>0 && op.create_hist_table(tablename.getText(),hist_table,temporal_columns,temporal_columns2)){
                 System.out.println("history table created");
             }  
         }

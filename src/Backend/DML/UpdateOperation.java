@@ -11,15 +11,15 @@ public class UpdateOperation {
 		db=database;
     }
 
-    public static void update(Map<String,Object> key,Map<String,Object> colmns, String tblname) {
+    public void update(Map<String,Object> key,Map<String,Object> colmns, String tblname) {
 	String sql_query = "update " + tblname + " set ";
 	boolean first = true;
         for (Map.Entry<String,Object> e: colmns.entrySet()) {
             if (first) {
                 first = false;
-                sql_query += e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += e.getKey() + "=" + ((String)e.getValue());
             } else {
-                sql_query += ", " + e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += ", " + e.getKey() + "=" + ((String)e.getValue());
             }
         }
 	sql_query += " where ";
@@ -27,9 +27,9 @@ public class UpdateOperation {
         for (Map.Entry<String,Object> e: key.entrySet()) {
             if (first) {
                 first = false;
-                sql_query += e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += e.getKey() + "=" + ((String)e.getValue());
             } else {
-                sql_query += " and " + e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += " and " + e.getKey() + "=" + ((String)e.getValue());
             }
 	}
 
@@ -41,7 +41,7 @@ public class UpdateOperation {
 	}
     }
 
-    public static void update_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void update_trigger(String tblname, String tbl_hist, ArrayList<String> temporal_colmns) {
 	String sql_query = "create trigger update_after_" + tblname + " after update "
 			  + "on " + tblname + " "
 			  + "for each row "
@@ -49,12 +49,12 @@ public class UpdateOperation {
 			  + "set VALID_END_DATE = NOW() where ";
 
 	boolean first = true;
-	for (Map.Entry<String,String> e: colmns.entrySet()) {
+	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
 			first = false;
-			sql_query += e.getKey() + " = old." + e.getKey();
+			sql_query += temporal_colmns.get(i) + " = old." + temporal_colmns.get(i);
 		} else {
-			sql_query += " and " + e.getKey() + " = old." + e.getKey();
+			sql_query += " and " + temporal_colmns.get(i) + " = old." + temporal_colmns.get(i);
 		}
 	}
 	sql_query += " and VALID_END_DATE is null; ";
@@ -62,24 +62,24 @@ public class UpdateOperation {
 	// Now insert into the hist_table
 	sql_query += "insert into " + tbl_hist + "( ";
 	first = true;
-	for (Map.Entry<String,String> e: colmns.entrySet()) {
+	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
 			first = false;
-			sql_query += e.getKey();
+			sql_query += temporal_colmns.get(i);
 		} else {
-			sql_query += ", " + e.getKey();
+			sql_query += ", " + temporal_colmns.get(i);
 		}
 	}
 
 	sql_query +=  ") values( ";
 	
 	first = true;
-	for (Map.Entry<String,String> e: colmns.entrySet()) {
+	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
 			first = false;
-			sql_query += "new." + e.getKey();
+			sql_query += "new." + temporal_colmns.get(i);
 		} else {
-			sql_query += ", new." + e.getKey();
+			sql_query += ", new." + temporal_colmns.get(i);
 		}
 	}
 
@@ -90,5 +90,18 @@ public class UpdateOperation {
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-    }
+	}
+	public static void main(String args[]){
+        Database d= new Database("srikar","Srikar@1829","EMP");
+        UpdateOperation upd= new UpdateOperation(d);
+		Map <String,Object> row= new HashMap<String,Object>();
+		Map<String,Object> key= new HashMap<String,Object>();
+		key.put("EMP_ID","'123'");
+        row.put("EMP_ID", "'123'");
+        row.put("EMP_NAME","'ABC'");
+        row.put("EMP_ADDR","'college'");
+        row.put("EMP_PHN","1234567890");
+        String tbl="employee";
+        upd.update(key,row,tbl);
+   }
 }

@@ -11,15 +11,15 @@ public class DeleteOperation {
 		db=database;
     }
 
-    public static void delete(Map<String,Object> colmns, String tblname) {
+    public void delete(Map<String,Object> colmns, String tblname) {
 	String sql_query = "delete from " + tblname + " where ";
 	boolean first = true;
         for (Map.Entry<String,Object> e: colmns.entrySet()) {
             if (first) {
                 first = false;
-                sql_query += e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += e.getKey() + "=" + ((String)e.getValue());
             } else {
-                sql_query += " and " + e.getKey() + "='" + ((String)e.getValue()) + "'";
+                sql_query += " and " + e.getKey() + "=" + ((String)e.getValue());
             }
         }
 
@@ -31,7 +31,7 @@ public class DeleteOperation {
 	}
     }
 
-    public static void delete_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void delete_trigger(String tblname, String tbl_hist, ArrayList<String> temporal_colmns) {
 	String sql_query = "create trigger delete_after_" + tblname + " after delete "
 			  + "on " + tblname + " "
 			  + "for each row "
@@ -39,12 +39,12 @@ public class DeleteOperation {
 			  + "set VALID_END_DATE = NOW() where ";
 
 	boolean first = true;
-	for (Map.Entry<String,String> e: colmns.entrySet()) {
+	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
 			first = false;
-			sql_query += e.getKey() + " = old." + e.getKey();
+			sql_query += temporal_colmns.get(i) + " = old." + temporal_colmns.get(i);
 		} else {
-			sql_query += " and " + e.getKey() + " = old." + e.getKey();
+			sql_query += " and " + temporal_colmns.get(i) + " = old." + temporal_colmns.get(i);
 		}
 	}
 	sql_query += " and VALID_END_DATE is null; END";
@@ -54,5 +54,13 @@ public class DeleteOperation {
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-    }
+	}
+	public static void main(String args[]){
+        Database d= new Database("srikar","Srikar@1829","EMP");
+        DeleteOperation ins= new DeleteOperation(d);
+        Map <String,Object> row= new HashMap<String,Object>();
+        row.put("EMP_ID", "'123'");
+        String tbl="employee";
+        ins.delete(row,tbl);
+   }
 }

@@ -37,7 +37,7 @@ public class Database {
     public ArrayList<String> get_tables() {
 	ArrayList<String> tables = new ArrayList<String>();
 	String sql_query = "select table_name FROM information_schema.tables where table_type = 'BASE TABLE' "
-		    + "table_schema = " + dbname;
+		    + "table_schema = " + "'"+dbname+"'";
 
         try {
 	    stmt = connection.prepareStatement(sql_query);
@@ -51,10 +51,10 @@ public class Database {
         return tables;
     }
     
-    public static Map<String,String> get_Columns(String tblname) {
+    public Map<String,String> get_Columns(String tblname) {
 	Map<String,String> columns = new 	HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
-		    + "table_schema = " + dbname + " and table_name = " + tblname;
+		    + "table_schema = " + "'"+dbname + "'" + " and table_name = " + "'"+tblname+"'";
 
         try {
 	    stmt = connection.prepareStatement(sql_query);
@@ -71,7 +71,7 @@ public class Database {
     public Map<String,String> get_primary_key(String tblname) {
 	Map<String,String> pk = new HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
-		    + "table_schema = " + dbname + " and table_name = " + tblname
+		    + "table_schema = " + "'"+dbname +"'"+ " and table_name = " + "'"+tblname+"'"
 		    + " column_key = 'PRI'";
 
         try {
@@ -86,27 +86,30 @@ public class Database {
 	return pk;
     }
 
-    public void copy_table(String tblname, String tbl_hist,Map<String,String> colmns) {
+    public void copy_table(String tblname, String tbl_hist,ArrayList<String> temporal_colmns) {
 	String sql_string = "INSERT INTO " + tbl_hist + "(";
 	boolean first=true;
-	for(Map.Entry<String,String> e: colmns.entrySet()){
+	for(int i=0;i<temporal_colmns.size();i++){
 		if(first){
 			first=false;
-			sql_string+=e.getKey();
+			sql_string+=temporal_colmns.get(i);
 		}
 		else{
-			sql_string+= ", "+ e.getKey();
+			sql_string+= ", "+ temporal_colmns.get(i);
 		}
+	}
+	for(int i=0;i<temporal_colmns.size();i++){
+		temporal_colmns.set(i,temporal_colmns.get(i).substring(0,(temporal_colmns.get(i)).indexOf("(")));
 	}
 	sql_string +=") SELECT ";
 	first=true;
-	for(Map.Entry<String,String> e: colmns.entrySet()){
+	for(int i=0;i<temporal_colmns.size();i++){
 		if(first){
 			first=false;
-			sql_string+=e.getKey();
+			sql_string+=temporal_colmns.get(i);
 		}
 		else{
-			sql_string+= ", "+ e.getKey();
+			sql_string+= ", "+ temporal_colmns.get(i);
 		}
 	}
 	sql_string+=" FROM "+ tblname;
@@ -130,8 +133,9 @@ public class Database {
 	} 
 	}
 	public static void main(String args[]){
+		Database db= new Database("srikar","Srikar@1829","EMP");
 		Map<String,String> columns=new HashMap<String,String>();
-		columns.putAll(get_Columns("employee"));
+		columns.putAll(db.get_Columns("employee"));
 		for(Map.Entry<String,String> e: columns.entrySet()){
 			System.out.println(e.getKey());
 		}

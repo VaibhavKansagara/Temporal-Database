@@ -26,15 +26,18 @@ public class CreateOperation {
 	}
     }
 
-    public boolean create_hist_table(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public boolean create_hist_table(String tblname, String tbl_hist,ArrayList<String>temporal_colmns,ArrayList<String> temporal_col) {
+	for(int i=0;i<temporal_colmns.size();i++){
+		System.out.println(temporal_colmns.get(i));
+	}
 	String sql_query = "create table if not exists " + tbl_hist + "( ";
 	boolean first = true;
-	for (Map.Entry<String,String> e: colmns.entrySet()) {
+	for (int i=0;i<temporal_colmns.size();i++) {
 	    if (first) {
 		first = false;
-		sql_query += e.getKey() + " " + e.getValue();
+		sql_query += temporal_colmns.get(i) + " ";
 	    } else {
-		sql_query += "," + e.getKey() + " " + e.getValue();
+		sql_query += "," + temporal_colmns.get(i);
 	    }
 	}
 
@@ -44,10 +47,18 @@ public class CreateOperation {
 	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute();
 	    // copy the values from table to tbl_hist.
-	    db.copy_table(tblname, tbl_hist,colmns);
-	    InsertOperation.insert_trigger(tblname, tbl_hist, colmns);
-	    UpdateOperation.update_trigger(tblname, tbl_hist, colmns);
-	    DeleteOperation.delete_trigger(tblname, tbl_hist, colmns);
+		//db.copy_table(tblname, tbl_hist,temporal_colmns);
+		InsertOperation ins_obj= new InsertOperation(db);
+		UpdateOperation upd_obj= new UpdateOperation(db);
+		DeleteOperation del_obj= new DeleteOperation(db);
+		for(int i=0;i<temporal_colmns.size();i++){
+			if(temporal_col.get(i)=="CHAR" || temporal_col.get(i)=="VARCHAR"){
+				temporal_colmns.set(i,temporal_colmns.get(i).substring(0,(temporal_colmns.get(i)).indexOf("(")));
+			}
+		}
+	    ins_obj.insert_trigger(tblname, tbl_hist, temporal_col);
+	    upd_obj.update_trigger(tblname, tbl_hist, temporal_col);
+	    del_obj.delete_trigger(tblname, tbl_hist, temporal_col);
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    return false;

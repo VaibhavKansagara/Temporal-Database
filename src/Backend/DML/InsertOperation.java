@@ -11,7 +11,7 @@ public class InsertOperation {
         db=database;
     }
     
-    public static void insert(Map<String,Object> colmns, String tblname) {
+    public void insert(Map<String,Object> colmns, String tblname) {
 	String sql_query = "insert into " + tblname + "(";
 	boolean first = true;
         for (Map.Entry<String,Object> e: colmns.entrySet()) {
@@ -43,31 +43,31 @@ public class InsertOperation {
 	}
     }
 
-    public static void insert_trigger(String tblname, String tbl_hist, Map<String,String> colmns) {
+    public void insert_trigger(String tblname, String tbl_hist, ArrayList<String> temporal_colmns) {
         String sql_query = "create trigger insert_after_" + tblname + " after insert "
                   + "on " + tblname + " "
                   + "for each row "
                   + "begin "
                   + "insert into " + tbl_hist + "( ";
         boolean first = true;
-        for (Map.Entry<String,String> e: colmns.entrySet()) {
+        for (int i=0;i<temporal_colmns.size();i++) {
             if (first) {
                 first = false;
-                sql_query += e.getKey();
+                sql_query += temporal_colmns.get(i);
             } else {
-                sql_query += ", " + e.getKey();
+                sql_query += ", " + temporal_colmns.get(i);
             }
         }
 
         sql_query +=  ") values( ";
 
         first = true;
-        for (Map.Entry<String,String> e: colmns.entrySet()) {
+        for (int i=0;i<temporal_colmns.size();i++) {
             if (first) {
                 first = false;
-                sql_query += "new." + e.getKey();
+                sql_query += "new." + temporal_colmns.get(i);
             } else {
-                sql_query += ", new." + e.getKey();
+                sql_query += ", new." + temporal_colmns.get(i);
             }
         }
 
@@ -81,12 +81,14 @@ public class InsertOperation {
         } 
     }
     public static void main(String args[]){
+        Database d= new Database("srikar","Srikar@1829","EMP");
+        InsertOperation ins= new InsertOperation(d);
         Map <String,Object> row= new HashMap<String,Object>();
-        row.put("EMP_ID", "123");
-        row.put("EMP_NAME","ABC");
-        row.put("EMP_ADDR","home");
+        row.put("EMP_ID", "'123'");
+        row.put("EMP_NAME","'ABC'");
+        row.put("EMP_ADDR","'home'");
         row.put("EMP_PHN","1234567890");
         String tbl="employee";
-        insert(row,tbl);
+        ins.insert(row,tbl);
    }
 }

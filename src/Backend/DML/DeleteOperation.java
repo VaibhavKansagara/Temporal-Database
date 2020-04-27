@@ -6,9 +6,9 @@ import Backend.Database;
 public class DeleteOperation {
     //private static Connection connection = null;
     private static PreparedStatement stmt = null;
-	private static Database db;
+    private static Database db;
     public DeleteOperation(Database database) {
-		db=database;
+	db=database;
     }
 
     public void delete(Map<String,Object> colmns, String tblname) {
@@ -36,7 +36,7 @@ public class DeleteOperation {
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			  + "set VALID_END_DATE = NOW() where ";
+			  + "set valid_end_time = NOW() where ";
 
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -47,20 +47,12 @@ public class DeleteOperation {
 			sql_query += " and " + temporal_colmns.get(i) + " = old." + temporal_colmns.get(i);
 		}
 	}
-	sql_query += " and VALID_END_DATE is null; END";
+	sql_query += " and valid_end_time is null; END";
 	try {
 		stmt = db.get_connection().prepareStatement(sql_query);
 		stmt.execute(); 
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-	}
-	public static void main(String args[]){
-        Database d= new Database("srikar","Srikar@1829","EMP");
-        DeleteOperation ins= new DeleteOperation(d);
-        Map <String,Object> row= new HashMap<String,Object>();
-        row.put("EMP_ID", "'123'");
-        String tbl="employee";
-        ins.delete(row,tbl);
-   }
+    }
 }

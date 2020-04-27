@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - DeleteOperation",
+            "request": "launch",
+            "mainClass": "Backend.DML.DeleteOperation"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - LoginPage",
             "request": "launch",
             "mainClass": "LoginPage",

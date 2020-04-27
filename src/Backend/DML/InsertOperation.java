@@ -80,15 +80,4 @@ public class InsertOperation {
             e.printStackTrace();
         } 
     }
-    public static void main(String args[]){
-        Database d= new Database("srikar","Srikar@1829","EMP");
-        InsertOperation ins= new InsertOperation(d);
-        Map <String,Object> row= new HashMap<String,Object>();
-        row.put("EMP_ID", "'123'");
-        row.put("EMP_NAME","'ABC'");
-        row.put("EMP_ADDR","'home'");
-        row.put("EMP_PHN","1234567890");
-        String tbl="employee";
-        ins.insert(row,tbl);
-   }
 }

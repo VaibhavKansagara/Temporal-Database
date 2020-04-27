@@ -13,7 +13,7 @@ public class CreateOperation {
     private static Database db;
 
     public CreateOperation(Database database) {
-		db = database;
+	db = database;
     }
 
     public void create_table(String query){
@@ -26,10 +26,8 @@ public class CreateOperation {
 	}
     }
 
-    public boolean create_hist_table(String tblname, String tbl_hist,ArrayList<String>temporal_colmns,ArrayList<String> temporal_col) {
-	for(int i=0;i<temporal_colmns.size();i++){
-		System.out.println(temporal_colmns.get(i));
-	}
+    public boolean create_hist_table(String tblname, String tbl_hist,ArrayList<String>temporal_colmns,
+    				     ArrayList<String> temporal_col) {
 	String sql_query = "create table if not exists " + tbl_hist + "( ";
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -42,20 +40,14 @@ public class CreateOperation {
 	}
 
 	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
-
 	try {
 	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute();
 	    // copy the values from table to tbl_hist.
-		//db.copy_table(tblname, tbl_hist,temporal_colmns);
-		InsertOperation ins_obj= new InsertOperation(db);
-		UpdateOperation upd_obj= new UpdateOperation(db);
-		DeleteOperation del_obj= new DeleteOperation(db);
-		for(int i=0;i<temporal_colmns.size();i++){
-			if(temporal_col.get(i)=="CHAR" || temporal_col.get(i)=="VARCHAR"){
-				temporal_colmns.set(i,temporal_colmns.get(i).substring(0,(temporal_colmns.get(i)).indexOf("(")));
-			}
-		}
+	    db.copy_table(tblname, tbl_hist,temporal_col);
+	    InsertOperation ins_obj= new InsertOperation(db);
+	    UpdateOperation upd_obj= new UpdateOperation(db);
+	    DeleteOperation del_obj= new DeleteOperation(db);
 	    ins_obj.insert_trigger(tblname, tbl_hist, temporal_col);
 	    upd_obj.update_trigger(tblname, tbl_hist, temporal_col);
 	    del_obj.delete_trigger(tblname, tbl_hist, temporal_col);

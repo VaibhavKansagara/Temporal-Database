@@ -98,9 +98,6 @@ public class Database {
 			sql_string+= ", "+ temporal_colmns.get(i);
 		}
 	}
-	for(int i=0;i<temporal_colmns.size();i++){
-		temporal_colmns.set(i,temporal_colmns.get(i).substring(0,(temporal_colmns.get(i)).indexOf("(")));
-	}
 	sql_string +=") SELECT ";
 	first=true;
 	for(int i=0;i<temporal_colmns.size();i++){

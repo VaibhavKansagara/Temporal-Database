@@ -114,4 +114,60 @@ public class TemporalOperations {
 	// code	
 	return ans;
     }
+
+
+
+
+	public ResultSet History(String tblname) {
+	ResultSet ans = null;
+	String sql_query = "select * from "+ tblname+"_hist";
+
+	try {
+	    stmt = db.get_connection().prepareStatement(sql_query);
+	    ans = stmt.executeQuery(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+	return ans;
+	}
+
+
+	public ResultSet At(DATETIME dat,String tblname){
+	ResultSet ans = null;
+
+	String sql_query = "select * from "+ tblname+"_hist where ";
+	sql_query+= tblname.valid_start_time + "<="+((String)dat);
+	sql_query+= " and (" + tblname.valid_end_time + ">="+((String)dat) + " or " + tblname.valid_end_time + "= null )";
+
+	try {
+	    stmt = db.get_connection().prepareStatement(sql_query);
+	    ans = stmt.executeQuery(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+	return ans;
+	}
+
+
+	public ResultSet Between_And(DATETIME dat1,DATETIME dat2,String tblname){
+	ResultSet ans = null;
+
+	String sql_query = "select * from "+ tblname+"_hist where ";
+	sql_query+= tblname.valid_start_time + "<="+((String)dat2);
+	sql_query+= " and (" + ((String)dat1) + "<="+tblname.valid_end_time + " or " + tblname.valid_end_time + "= null )";
+
+	// String sql_query = "select * from "+ tblname+"_hist where ";
+	// sql_query+= tblname.valid_start_time + "<="+((String)dat1);
+	// sql_query+= " and (" + tblname.valid_end_time + ">="+((String)dat2) + " or " + tblname.valid_end_time + "= null )";
+
+	try {
+	    stmt = db.get_connection().prepareStatement(sql_query);
+	    ans = stmt.executeQuery(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+
+	return ans;
+	}
+
 }

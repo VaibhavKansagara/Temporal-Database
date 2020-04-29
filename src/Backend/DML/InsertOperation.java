@@ -80,4 +80,32 @@ public class InsertOperation {
             e.printStackTrace();
         } 
     }
+    public static void main(String args[]){
+        Database d= new Database("srikar","Srikar@1829","EMP");
+        InsertOperation ins= new InsertOperation(d);
+        Map <String,Object> row= new HashMap<String,Object>();
+        row.put("EMP_ID", "'123'");
+        row.put("EMP_NAME","'ABC'");
+        row.put("EMP_ADDR","'home'");
+        row.put("EMP_PHN","1234567890");
+        String tbl="employee";
+        ins.insert(row,tbl);
+
+
+        Map <String,Object> row2= new HashMap<String,Object>();
+        row2.put("EMP_ID", "'345'");
+        row2.put("EMP_NAME","'DEF'");
+        row2.put("EMP_ADDR","'home'");
+        row2.put("EMP_PHN","1111111111");
+        //ins.insert(row2,tbl);
+
+
+
+        Map <String,Object> row3= new HashMap<String,Object>();
+        row3.put("EMP_ID", "'234'");
+        row3.put("EMP_NAME","'GHI'");
+        row3.put("EMP_ADDR","'home'");
+        row3.put("EMP_PHN","1821931750");
+        //ins.insert(row3,tbl);
+   }
 }

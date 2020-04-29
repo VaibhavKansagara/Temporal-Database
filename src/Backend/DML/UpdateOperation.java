@@ -91,4 +91,64 @@ public class UpdateOperation {
 		e.printStackTrace();
 	    }
 	}
+	public static void main(String args[]){
+        Database d= new Database("srikar","Srikar@1829","EMP");
+        UpdateOperation upd= new UpdateOperation(d);
+		Map <String,Object> row= new HashMap<String,Object>();
+		Map<String,Object> key= new HashMap<String,Object>();
+		key.put("EMP_ID","'123'");
+        row.put("EMP_ID", "'123'");
+        row.put("EMP_NAME","'ABC'");
+        row.put("EMP_ADDR","'college'");
+        row.put("EMP_PHN","1234567890");
+        String tbl="employee";
+		//upd.update(key,row,tbl);
+		
+		Map <String,Object> row2= new HashMap<String,Object>();
+		Map<String,Object> key2= new HashMap<String,Object>();
+		key2.put("EMP_ID","'234'");
+        row2.put("EMP_ID", "'234'");
+        row2.put("EMP_NAME","'GHI'");
+        row2.put("EMP_ADDR","'college2'");
+        row2.put("EMP_PHN","1821931750");
+		upd.update(key2,row2,tbl);
+		
+		Map <String,Object> row3= new HashMap<String,Object>();
+		Map<String,Object> key3= new HashMap<String,Object>();
+		key3.put("EMP_ID","'345'");
+        row3.put("EMP_ID", "'345'");
+        row3.put("EMP_NAME","'DEF'");
+        row3.put("EMP_ADDR","'college3'");
+        row3.put("EMP_PHN","111111111");
+		upd.update(key3,row3,tbl);
+		
+
+		Map <String,Object> row4= new HashMap<String,Object>();
+		Map<String,Object> key4= new HashMap<String,Object>();
+		key4.put("EMP_ID","'123'");
+        row4.put("EMP_ID", "'123'");
+        row4.put("EMP_NAME","'ABC'");
+        row4.put("EMP_ADDR","'college'");
+        row4.put("EMP_PHN","9848032919");
+		//upd.update(key,row4,tbl);
+		
+		Map <String,Object> row5= new HashMap<String,Object>();
+		Map<String,Object> key5= new HashMap<String,Object>();
+		key5.put("EMP_ID","'234'");
+        row5.put("EMP_ID", "'234'");
+        row5.put("EMP_NAME","'GHI'");
+        row5.put("EMP_ADDR","'college2'");
+        row5.put("EMP_PHN","4432129491");
+		upd.update(key5,row5,tbl);
+
+
+		Map <String,Object> row6= new HashMap<String,Object>();
+		Map<String,Object> key6= new HashMap<String,Object>();
+		key6.put("EMP_ID","'345'");
+        row6.put("EMP_ID", "'345'");
+        row6.put("EMP_NAME","'DEF'");
+        row6.put("EMP_ADDR","'college3'");
+        row6.put("EMP_PHN","9949291909");
+		upd.update(key6,row6,tbl);
+   }
 }

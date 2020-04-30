@@ -36,7 +36,9 @@ public class DeleteOperation {
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			  + "set valid_end_time = NOW() where ";
+			//   + "set valid_end_time = NOW() where ";
+			  + "set valid_end_time = NOW() and operation_caused = String(delete) where ";
+
 
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {

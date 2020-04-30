@@ -46,7 +46,9 @@ public class UpdateOperation {
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			  + "set valid_end_time = NOW() where ";
+			//   + "set valid_end_time = NOW() where ";
+			  + "set valid_end_time = NOW() and operation_caused = String(update) where ";
+
 
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -71,7 +73,9 @@ public class UpdateOperation {
 		}
 	}
 
-	sql_query +=  ") values( ";
+	// sql_query +=  ") values( ";
+	sql_query +=  ", caused_operation) values( ";
+
 	
 	first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -83,7 +87,7 @@ public class UpdateOperation {
 		}
 	}
 
-	sql_query +=  "); END";
+	sql_query +=  ",String(update) ); END";
 	try {
 		stmt = db.get_connection().prepareStatement(sql_query);
 		stmt.execute(); 

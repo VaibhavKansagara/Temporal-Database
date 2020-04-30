@@ -39,7 +39,9 @@ public class CreateOperation {
 	    }
 	}
 
-	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
+	// sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
+	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL, operation_caused char(100) DEFAULT String(insert) )";
+
 	try {
 	    stmt = db.get_connection().prepareStatement(sql_query);
 	    stmt.execute();

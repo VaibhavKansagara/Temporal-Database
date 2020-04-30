@@ -73,5 +73,10 @@ class MenuPage {
 
         frame.setVisible(true);
     }
+
+	public static void main(String args[])
+	{
+		MenuPage mp = new MenuPage();
+	}
     
 }

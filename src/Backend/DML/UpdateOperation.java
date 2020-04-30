@@ -111,7 +111,7 @@ public class UpdateOperation {
         row2.put("EMP_NAME","'GHI'");
         row2.put("EMP_ADDR","'college2'");
         row2.put("EMP_PHN","1821931750");
-		upd.update(key2,row2,tbl);
+		//upd.update(key2,row2,tbl);
 		
 		Map <String,Object> row3= new HashMap<String,Object>();
 		Map<String,Object> key3= new HashMap<String,Object>();
@@ -119,7 +119,7 @@ public class UpdateOperation {
         row3.put("EMP_ID", "'345'");
         row3.put("EMP_NAME","'DEF'");
         row3.put("EMP_ADDR","'college3'");
-        row3.put("EMP_PHN","111111111");
+        row3.put("EMP_PHN","1111111111");
 		upd.update(key3,row3,tbl);
 		
 
@@ -139,7 +139,7 @@ public class UpdateOperation {
         row5.put("EMP_NAME","'GHI'");
         row5.put("EMP_ADDR","'college2'");
         row5.put("EMP_PHN","4432129491");
-		upd.update(key5,row5,tbl);
+		//upd.update(key5,row5,tbl);
 
 
 		Map <String,Object> row6= new HashMap<String,Object>();
@@ -149,6 +149,6 @@ public class UpdateOperation {
         row6.put("EMP_NAME","'DEF'");
         row6.put("EMP_ADDR","'college3'");
         row6.put("EMP_PHN","9949291909");
-		upd.update(key6,row6,tbl);
+		//upd.update(key6,row6,tbl);
    }
 }

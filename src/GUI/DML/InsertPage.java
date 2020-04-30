@@ -81,7 +81,7 @@ class InsertPage {
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						rows_list.getText();
+						//rows_list.getText();
 					}
 				});
 			}

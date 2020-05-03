@@ -327,8 +327,8 @@ public class TemporalOperations {
 		return ans;
 	}
 
-	public Map <String,String> get_Temporal_Columns(String tbl) {
-		Map <String,String> s1 = db.get_Columns(tbl1);
+	public ArrayList<String> get_Temporal_Columns(String tbl) {
+		Map <String,String> s1 = db.get_Columns(tbl);
 		ArrayList <String> ans = new ArrayList<String>();
 		for (Map.Entry<String,String> e: s1.entrySet()) {
 			if (!e.getKey().equals("valid_start_time") && 
@@ -380,7 +380,118 @@ public class TemporalOperations {
 		Extract_ResultSet(ans, colmn2);
 		return ans;
 	}
+	public ResultSet At_cross_join(String tbl1,String tbl2,String dat){
+		ResultSet ans=null;
+		ArrayList <String> cols1= get_Temporal_Columns(tbl1);
+		ArrayList <String> cols2= get_Temporal_Columns(tbl2);
+		
 
+		String sql_query = "select GREATEST(" + "t1.valid_start_time ," + 
+				   "t2.valid_start_time) as valid_start_time" ;
+		for(int i=0;i<cols1.size();i++){
+		    sql_query+=", "+cols1.get(i);
+		}
+		for(int i=0;i<cols2.size();i++){
+		    sql_query+=", "+cols2.get(i);
+		}
+
+		sql_query += ", LEAST(IFNULL("+"t1.valid_end_time, "+"t2.valid_end_time) , " +
+			     "IFNULL("+"t2.valid_end_time, "+
+			     "t1.valid_end_time)) as valid_end_time from (";
+		
+		
+		sql_query+= "(select * from "+ tbl1+ " where ";
+		sql_query+= "valid_start_time " + "<= '"+ dat+"' ";
+		sql_query+= " and ( valid_end_time " + ">= '"+dat+"' " + " or " 
+		+"valid_end_time " + "is null )) as t1, ";
+		
+		sql_query+= "(select * from "+ tbl2+ " where ";
+		sql_query+= "valid_start_time " + "<= '"+ dat+"' ";
+		sql_query+= " and ( valid_end_time " + ">= '"+dat+"' " + " or " 
+		+"valid_end_time " + "is null )) as t2)";
+		
+		sql_query +=" where "+  "(("+"t1.valid_end_time > " +
+			     "t2.valid_start_time)" + "or ("+"t1.valid_end_time is null)) and" +
+			     "(("+"t2.valid_end_time > "+"t1.valid_start_time)" + 
+				 "or ("+"t2.valid_end_time is null))";
+		//System.out.println(sql_query);
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ArrayList<String> colmn2= new ArrayList<String>();
+		for(int i=0;i<cols1.size();i++){
+		    colmn2.add(cols1.get(i));
+		}
+		for(int i=0;i<cols2.size();i++){
+		    colmn2.add(cols2.get(i));
+		}
+		colmn2.add("valid_start_time");
+		colmn2.add("valid_end_time");
+		Extract_ResultSet(ans, colmn2);
+
+
+		return ans;
+	}
+	public ResultSet Between_And_cross_join(String tbl1,String tbl2, String dat1,String dat2){
+		ResultSet ans=null;
+		ArrayList <String> cols1= get_Temporal_Columns(tbl1);
+		ArrayList <String> cols2= get_Temporal_Columns(tbl2);
+		
+
+		String sql_query = "select GREATEST(" + "t1.valid_start_time ," + 
+				   "t2.valid_start_time) as valid_start_time" ;
+		for(int i=0;i<cols1.size();i++){
+		    sql_query+=", "+cols1.get(i);
+		}
+		for(int i=0;i<cols2.size();i++){
+		    sql_query+=", "+cols2.get(i);
+		}
+
+		sql_query += ", LEAST(IFNULL("+"t1.valid_end_time, "+"t2.valid_end_time) , " +
+			     "IFNULL("+"t2.valid_end_time, "+
+				 "t1.valid_end_time)) as valid_end_time from (";
+				 
+		
+		
+		sql_query+= "(select * from "+ tbl1+" where ";
+		sql_query+= "valid_start_time " + "<= '"+dat2+"' ";
+		sql_query+= " and ('" + dat1 +"' " +"<="+"valid_end_time "+ 
+		" or " + "valid_end_time "+ "is null )) as t1, ";
+
+
+		sql_query+= "(select * from "+ tbl2+" where ";
+		sql_query+= "valid_start_time " + "<= '"+dat2+"' ";
+		sql_query+= " and ('" + dat1 +"' " +"<="+"valid_end_time "+ 
+		" or " + "valid_end_time "+ "is null )) as t2)";
+
+
+		sql_query +=" where "+  "(("+"t1.valid_end_time > " +
+			     "t2.valid_start_time) " + "or ("+"t1.valid_end_time is null)) and " +
+			     "(("+"t2.valid_end_time > "+"t1.valid_start_time)" + 
+				 "or ("+"t2.valid_end_time is null))";
+		//System.out.println(sql_query);
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ArrayList<String> colmn2= new ArrayList<String>();
+		for(int i=0;i<cols1.size();i++){
+		    colmn2.add(cols1.get(i));
+		}
+		for(int i=0;i<cols2.size();i++){
+		    colmn2.add(cols2.get(i));
+		}
+		colmn2.add("valid_start_time");
+		colmn2.add("valid_end_time");
+		Extract_ResultSet(ans, colmn2);
+
+		return ans;
+	}
 	public ResultSet History_Natural_join(String tbl1 , String tbl2) {
 		ResultSet ans = null;
 		return ans;
@@ -404,15 +515,15 @@ public class TemporalOperations {
 		//temp_ops.First_Evolution(m,"EMP_ADDR","employee");
 		//temp_ops.Last_Evolution(m, "EMP_ADDR", "employee");
 		java.util.Date dt = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("2020-04-29 18:00:00");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("2020-05-03 12:26:00");
 		String currentTime = sdf.format(dt);
 		java.util.Date dt2 = new java.util.Date();
 
-		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("2020-04-29 17:00:00");
+		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("2020-05-03 16:26:00");
 		String currentTime2 = sdf2.format(dt2);
 		//temp_ops.Between_And(currentTime2,currentTime,"employee");
 
-		temp_ops.History_cross_join("employee_hist", "department_hist");
+		temp_ops.Between_And_cross_join("employee_hist", "department_hist",currentTime,currentTime2);
 }
 }
  

@@ -46,8 +46,8 @@ public class UpdateOperation {
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			//   + "set valid_end_time = NOW() where ";
-			  + "set valid_end_time = NOW() and operation_caused = String(update) where ";
+			//+ "set valid_end_time = NOW() where ";
+			+ "set valid_end_time = NOW() , operation_caused = 'update' "+" where ";
 
 
 	boolean first = true;
@@ -73,8 +73,8 @@ public class UpdateOperation {
 		}
 	}
 
-	// sql_query +=  ") values( ";
-	sql_query +=  ", caused_operation) values( ";
+	 //sql_query +=  " ) values( ";
+	sql_query +=  ", operation_caused) values( ";
 
 	
 	first = true;
@@ -87,7 +87,7 @@ public class UpdateOperation {
 		}
 	}
 
-	sql_query +=  ",String(update) ); END";
+	sql_query +=  " , 'update' ); END";
 	try {
 		stmt = db.get_connection().prepareStatement(sql_query);
 		stmt.execute(); 
@@ -124,7 +124,7 @@ public class UpdateOperation {
         row3.put("EMP_NAME","'DEF'");
         row3.put("EMP_ADDR","'college3'");
         row3.put("EMP_PHN","1111111111");
-		upd.update(key3,row3,tbl);
+		//upd.update(key3,row3,tbl);
 		
 
 		Map <String,Object> row4= new HashMap<String,Object>();
@@ -153,6 +153,6 @@ public class UpdateOperation {
         row6.put("EMP_NAME","'DEF'");
         row6.put("EMP_ADDR","'college3'");
         row6.put("EMP_PHN","9949291909");
-		//upd.update(key6,row6,tbl);
+		upd.update(key6,row6,tbl);
    }
 }

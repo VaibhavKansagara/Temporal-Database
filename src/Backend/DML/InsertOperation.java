@@ -89,7 +89,7 @@ public class InsertOperation {
         row.put("EMP_ADDR","'home'");
         row.put("EMP_PHN","1234567890");
         String tbl="employee";
-        ins.insert(row,tbl);
+        //ins.insert(row,tbl);
 
 
         Map <String,Object> row2= new HashMap<String,Object>();
@@ -107,5 +107,20 @@ public class InsertOperation {
         row3.put("EMP_ADDR","'home'");
         row3.put("EMP_PHN","1821931750");
         //ins.insert(row3,tbl);
+        
+        
+        
+        Map <String,Object> row4= new HashMap<String,Object>();
+        String tbl2="department";
+        row4.put("DEPT_ID", "'232'");
+        row4.put("DEPT_NAME","'abc'");
+        row4.put("DEPT_ADDR","'Ecity'");
+        //ins.insert(row4,tbl2);
+        
+        Map <String,Object> row5= new HashMap<String,Object>();
+        row5.put("DEPT_ID", "'275'");
+        row5.put("DEPT_NAME","'def'");
+        row5.put("DEPT_ADDR","'Silkboard'");
+        ins.insert(row5,tbl2);
    }
 }

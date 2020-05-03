@@ -28,6 +28,7 @@ public class CreateOperation {
 
     public boolean create_hist_table(String tblname, String tbl_hist,ArrayList<String>temporal_colmns,
     				     ArrayList<String> temporal_col) {
+	String s1="insert";
 	String sql_query = "create table if not exists " + tbl_hist + "( ";
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -39,8 +40,8 @@ public class CreateOperation {
 	    }
 	}
 
-	// sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
-	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL, operation_caused char(100) DEFAULT String(insert) )";
+	//sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL )";
+	sql_query += ", valid_start_time DATETIME DEFAULT NOW(), valid_end_time DATETIME NULL, operation_caused char(100) DEFAULT 'insert'" +" ) ";
 
 	try {
 	    stmt = db.get_connection().prepareStatement(sql_query);

@@ -32,12 +32,13 @@ public class DeleteOperation {
     }
 
     public void delete_trigger(String tblname, String tbl_hist, ArrayList<String> temporal_colmns) {
+		String s1="delete";
 	String sql_query = "create trigger delete_after_" + tblname + " after delete "
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			//   + "set valid_end_time = NOW() where ";
-			  + "set valid_end_time = NOW() and operation_caused = String(delete) where ";
+//+ "set valid_end_time = NOW() where ";
+			 + "set valid_end_time = NOW() , operation_caused = 'delete' "+ " where ";
 
 
 	boolean first = true;
@@ -61,8 +62,13 @@ public class DeleteOperation {
         Database d= new Database("srikar","Srikar@1829","EMP");
         DeleteOperation ins= new DeleteOperation(d);
         Map <String,Object> row= new HashMap<String,Object>();
-        row.put("EMP_ID", "'123'");
+        row.put("EMP_ID", "'234'");
         String tbl="employee";
-        ins.delete(row,tbl);
+		//ins.delete(row,tbl);
+		
+		Map <String,Object> row2= new HashMap<String,Object>();
+        row2.put("DEPT_ID", "'275'");
+        String tbl2="department";
+        ins.delete(row2,tbl2);
    }
 }

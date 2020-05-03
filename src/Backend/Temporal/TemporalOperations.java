@@ -326,6 +326,84 @@ public class TemporalOperations {
 		}
 		return ans;
 	}
+	public ResultSet History_cross_join(String tbl1 , String tbl2){
+		ResultSet ans=null;
+		Map <String,String> s1=db.get_Columns(tbl1);
+		ArrayList <String> cols1= new ArrayList<String>();
+		int c1=0;
+		int c2=0;
+		int c3=0;
+		int c4=0;
+		int c5=0;
+		int c6=0;
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+        		cols1.add(e.getKey());
+		}
+		Map <String,String> s2=db.get_Columns(tbl2);
+		ArrayList <String> cols2= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s2.entrySet()) {
+        		cols2.add(e.getKey());
+		}
+		for(int i=0;i<cols1.size();i++){
+			if(cols1.get(i).equals("valid_start_time")){
+				c1=i;
+			}
+			else if(cols1.get(i).equals("valid_end_time")){
+				c2=i;
+			}
+			else if(cols1.get(i).equals("operation_caused")){
+				c5=i;
+			}
+		}
+		for(int i=0;i<cols2.size();i++){
+			
+			if(cols2.get(i).equals("valid_start_time")){
+				c3=i;
+			}
+			else if(cols2.get(i).equals("valid_end_time")){
+				c4=i;
+			}
+			else if(cols2.get(i).equals("operation_caused")){
+				c6=i;
+			}
+		}
+		
+
+		String sql_query = "select GREATEST("+tbl1+ ".valid_start_time ,"+tbl2+".valid_start_time) as valid_start_time" ;
+		for(int i=0;i<cols1.size();i++){
+			if(i!=c1 && i!=c2 && i!=c5){
+				sql_query+=", "+cols1.get(i);
+			}
+		}
+		for(int i=0;i<cols2.size();i++){
+			if(i!=c3 && i!=c4 && i!=c6){
+				sql_query+=", "+cols2.get(i);
+			}
+		}
+		sql_query+=", LEAST(IFNULL("+tbl1+".valid_end_time, "+tbl2+".valid_end_time) , "+"IFNULL("+tbl2+".valid_end_time, "+tbl1+".valid_end_time)) as valid_end_time from "+tbl1 +", "+ tbl2 +" where "+
+		"(("+tbl1+".valid_end_time > "+tbl2+".valid_start_time)" +"or ("+tbl1+".valid_end_time is null)) and"  +"(("+tbl2+".valid_end_time > "+tbl1+".valid_start_time)" +"or ("+tbl2+".valid_end_time is null))";
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ArrayList<String> colmn2= new ArrayList<String>();
+		for(int i=0;i<cols1.size();i++){
+			if(i!=c1 && i!=c2 && i!=c5){
+				colmn2.add(cols1.get(i));
+			}
+		}
+		for(int i=0;i<cols2.size();i++){
+			if(i!=c3 && i!=c4 && i!=c6){
+				colmn2.add(cols2.get(i));
+			}
+		}
+		colmn2.add("valid_start_time");
+		colmn2.add("valid_end_time");
+		Extract_ResultSet(ans, colmn2);
+		return ans;
+	}
 	public static void main(String args[]){
 		Database d = new Database("srikar", "Srikar@1829", "EMP");
 		Map <String,Object> m= new HashMap<String,Object>();
@@ -342,7 +420,7 @@ public class TemporalOperations {
 		//temp_ops.Evolution(m, "EMP_ADDR", "employee");
 
 		//temp_ops.First_Evolution(m,"EMP_ADDR","employee");
-		temp_ops.Last_Evolution(m, "EMP_ADDR", "employee");
+		//temp_ops.Last_Evolution(m, "EMP_ADDR", "employee");
 		java.util.Date dt = new java.util.Date();
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("2020-04-29 18:00:00");
 		String currentTime = sdf.format(dt);
@@ -351,6 +429,8 @@ public class TemporalOperations {
 		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("2020-04-29 17:00:00");
 		String currentTime2 = sdf2.format(dt2);
 		//temp_ops.Between_And(currentTime2,currentTime,"employee");
+
+		temp_ops.History_cross_join("employee_hist", "department_hist");
 }
 }
  

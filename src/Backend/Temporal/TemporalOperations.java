@@ -330,12 +330,8 @@ public class TemporalOperations {
 		ResultSet ans=null;
 		Map <String,String> s1=db.get_Columns(tbl1);
 		ArrayList <String> cols1= new ArrayList<String>();
-		int c1=0;
-		int c2=0;
-		int c3=0;
-		int c4=0;
-		int c5=0;
-		int c6=0;
+		int c1 = 0,c2 = 0,c3 = 0, c4 = 0, c5 = 0, c6 = 0;
+
 		for (Map.Entry<String,String> e: s1.entrySet()) {
         		cols1.add(e.getKey());
 		}
@@ -369,7 +365,8 @@ public class TemporalOperations {
 		}
 		
 
-		String sql_query = "select GREATEST("+tbl1+ ".valid_start_time ,"+tbl2+".valid_start_time) as valid_start_time" ;
+		String sql_query = "select GREATEST(" + tbl1 + ".valid_start_time ," + tbl2 + 
+				   ".valid_start_time) as valid_start_time" ;
 		for(int i=0;i<cols1.size();i++){
 			if(i!=c1 && i!=c2 && i!=c5){
 				sql_query+=", "+cols1.get(i);
@@ -380,8 +377,13 @@ public class TemporalOperations {
 				sql_query+=", "+cols2.get(i);
 			}
 		}
-		sql_query+=", LEAST(IFNULL("+tbl1+".valid_end_time, "+tbl2+".valid_end_time) , "+"IFNULL("+tbl2+".valid_end_time, "+tbl1+".valid_end_time)) as valid_end_time from "+tbl1 +", "+ tbl2 +" where "+
-		"(("+tbl1+".valid_end_time > "+tbl2+".valid_start_time)" +"or ("+tbl1+".valid_end_time is null)) and"  +"(("+tbl2+".valid_end_time > "+tbl1+".valid_start_time)" +"or ("+tbl2+".valid_end_time is null))";
+		sql_query += ", LEAST(IFNULL("+tbl1+".valid_end_time, "+tbl2+".valid_end_time) , " +
+			     "IFNULL("+tbl2+".valid_end_time, "+tbl1 +
+			     ".valid_end_time)) as valid_end_time from "+ tbl1 +
+			     ", " + tbl2 +" where "+ "(("+tbl1+".valid_end_time > " +
+			     tbl2 +".valid_start_time)" + "or ("+tbl1+".valid_end_time is null)) and" +
+			     "(("+tbl2+".valid_end_time > "+tbl1+".valid_start_time)" + 
+			     "or ("+tbl2+".valid_end_time is null))";
 		try {
 			stmt = db.get_connection().prepareStatement(sql_query);
 			ans = stmt.executeQuery(); 

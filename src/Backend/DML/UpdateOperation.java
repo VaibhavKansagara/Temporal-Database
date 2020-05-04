@@ -46,9 +46,12 @@ public class UpdateOperation {
 			  + "on " + tblname + " "
 			  + "for each row "
 			  + "begin update " + tbl_hist + " "
-			//+ "set valid_end_time = NOW() where ";
-			+ "set valid_end_time = NOW() , operation_caused = 'update' "+" where ";
+			  + "set valid_end_time = NOW() , operation_caused = 'update' "+" where ";
 
+	Map<String,String> pk = db.get_primary_key(tblname);
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += e.getKey() + " = old." + e.getKey() + " and ";
+	}
 
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
@@ -63,6 +66,11 @@ public class UpdateOperation {
 	
 	// Now insert into the hist_table
 	sql_query += "insert into " + tbl_hist + "( ";
+	
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += e.getKey() + ", ";
+	}
+	
 	first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
@@ -73,10 +81,12 @@ public class UpdateOperation {
 		}
 	}
 
-	 //sql_query +=  " ) values( ";
 	sql_query +=  ", operation_caused) values( ";
 
-	
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += "new." + e.getKey() + ", ";
+	}
+
 	first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
 		if (first) {
@@ -89,12 +99,12 @@ public class UpdateOperation {
 
 	sql_query +=  " , 'update' ); END";
 	try {
-		stmt = db.get_connection().prepareStatement(sql_query);
-		stmt.execute(); 
-	    } catch (SQLException e) {
-		e.printStackTrace();
-	    }
+	    stmt = db.get_connection().prepareStatement(sql_query);
+	    stmt.execute(); 
+	} catch (SQLException e) {
+	    e.printStackTrace();
 	}
+    }
 	public static void main(String args[]){
         Database d= new Database("srikar","Srikar@1829","EMP");
         UpdateOperation upd= new UpdateOperation(d);

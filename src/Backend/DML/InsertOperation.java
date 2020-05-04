@@ -48,8 +48,14 @@ public class InsertOperation {
                   + "on " + tblname + " "
                   + "for each row "
                   + "begin "
-                  + "insert into " + tbl_hist + "( ";
-        boolean first = true;
+		  + "insert into " + tbl_hist + "( ";
+	
+	Map<String,String> pk = db.get_primary_key(tblname);
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+		sql_query += e.getKey() + ", ";
+	}
+
+	boolean first = true;
         for (int i=0;i<temporal_colmns.size();i++) {
             if (first) {
                 first = false;
@@ -60,6 +66,10 @@ public class InsertOperation {
         }
 
         sql_query +=  ") values( ";
+
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += "new." + e.getKey() + ", ";
+	}
 
         first = true;
         for (int i=0;i<temporal_colmns.size();i++) {

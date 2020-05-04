@@ -72,7 +72,7 @@ public class Database {
 	Map<String,String> pk = new HashMap<String,String>();
 	String sql_query = "select column_name, column_type from information_schema.columns where "
 		    + "table_schema = " + "'"+dbname +"'"+ " and table_name = " + "'"+tblname+"'"
-		    + " column_key = 'PRI'";
+		    + " and column_key = 'PRI'";
 
         try {
 	    stmt = connection.prepareStatement(sql_query);
@@ -87,48 +87,57 @@ public class Database {
     }
 
     public void copy_table(String tblname, String tbl_hist,ArrayList<String> temporal_colmns) {
-	String sql_string = "INSERT INTO " + tbl_hist + "(";
+	String sql_query = "INSERT INTO " + tbl_hist + "(";
+
+	Map<String,String> pk = get_primary_key(tblname);
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += e.getKey() + ", ";
+	}
+	
 	boolean first=true;
 	for(int i=0;i<temporal_colmns.size();i++){
 		if(first){
 			first=false;
-			sql_string+=temporal_colmns.get(i);
+			sql_query+=temporal_colmns.get(i);
 		}
 		else{
-			sql_string+= ", "+ temporal_colmns.get(i);
+			sql_query+= ", "+ temporal_colmns.get(i);
 		}
 	}
-	sql_string +=") SELECT ";
+	sql_query +=") SELECT ";
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+	    sql_query += e.getKey() + ", ";
+	}
 	first=true;
 	for(int i=0;i<temporal_colmns.size();i++){
 		if(first){
 			first=false;
-			sql_string+=temporal_colmns.get(i);
+			sql_query+=temporal_colmns.get(i);
 		}
 		else{
-			sql_string+= ", "+ temporal_colmns.get(i);
+			sql_query+= ", "+ temporal_colmns.get(i);
 		}
 	}
-	sql_string+=" FROM "+ tblname;
+	sql_query+=" FROM "+ tblname;
 	try {
-		stmt = connection.prepareStatement(sql_string);
+		stmt = connection.prepareStatement(sql_query);
 		stmt.execute(); 
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-	}
-	public Connection get_connection(){
-		return connection;
-	}
+    }
+    
+    public Connection get_connection(){
+	return connection;
+    }
 
     public void close_connection() {
 	try {
-		connection.close();
-	    
+	    connection.close();
 	} catch (Exception e) {
 	    e.printStackTrace(); 
 	} 
-	}
+    }
 	public static void main(String args[]){
 		Database db= new Database("srikar","Srikar@1829","EMP");
 		Map<String,String> columns=new HashMap<String,String>();

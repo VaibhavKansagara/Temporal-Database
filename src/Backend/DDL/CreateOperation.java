@@ -28,8 +28,13 @@ public class CreateOperation {
 
     public boolean create_hist_table(String tblname, String tbl_hist,ArrayList<String>temporal_colmns,
     				     ArrayList<String> temporal_col) {
-	String s1="insert";
+	Map<String,String> pk = db.get_primary_key(tblname);
 	String sql_query = "create table if not exists " + tbl_hist + "( ";
+
+	for (Map.Entry<String,String> e: pk.entrySet()) {
+		sql_query += e.getKey() + " " + e.getValue() + ", ";
+	}
+
 	boolean first = true;
 	for (int i=0;i<temporal_colmns.size();i++) {
 	    if (first) {

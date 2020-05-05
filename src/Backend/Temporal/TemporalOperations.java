@@ -94,8 +94,8 @@ public class TemporalOperations {
 
     public ResultSet First(String colmn, String tblname) {
 	ResultSet ans = null;
-	ArrayList<String> col = new ArrayList<String>();
-	String sql_query = "select "+ colmn + ",valid_start_time,valid_end_time from " +
+	// ArrayList<String> col = new ArrayList<String>();
+	String sql_query = "select "+ colmn + ",valid_start_time,valid_end_time,operation_caused from " +
 			   tblname + "_hist where ";
 	sql_query += "valid_start_time = (select min(valid_start_time) from "
 		     + tblname + "_hist)";
@@ -105,16 +105,15 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-	col.add(colmn);
-	Extract_ResultSet(ans, col);
+	// col.add(colmn);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 
     public ResultSet Last(String colmn, String tblname) {
 	ResultSet ans = null;
-	// code
-	ArrayList<String> col = new ArrayList<String>();
-	String sql_query = "select distinct "+ colmn + ",valid_start_time,valid_end_time from " +
+	// ArrayList<String> col = new ArrayList<String>();
+	String sql_query = "select distinct "+ colmn + ",valid_start_time,valid_end_time,operation_caused from " +
 			   tblname + "_hist where ";
 	sql_query += "valid_start_time = (select max(valid_start_time) from "
 		     + tblname + "_hist)";
@@ -124,16 +123,16 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-	col.add(colmn);
-	Extract_ResultSet(ans, col);
+	// col.add(colmn);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 
     public ResultSet Previous(String colmn, String tblname, String val) {
 	ResultSet ans = null;
-	ArrayList<String> col = new ArrayList<String>();
+	// ArrayList<String> col = new ArrayList<String>();
 	try{
-		String sql_query = "select "+ colmn + ", valid_start_time ,valid_end_time from "
+		String sql_query = "select "+ colmn + ", valid_start_time ,valid_end_time,operation_caused from "
 			    + tblname + "_hist where "
 			    + " valid_start_time = (select max(valid_start_time) from "
 			    + tblname + "_hist where "
@@ -146,17 +145,16 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-	col.add(colmn);
-	Extract_ResultSet(ans, col);
+	// col.add(colmn);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 
     public ResultSet Next(String colmn, String tblname, String val) {
 	ResultSet ans = null;
-	// code
-	ArrayList<String> col = new ArrayList<String>();
+	// ArrayList<String> col = new ArrayList<String>();
 	try{
-		String sql_query = "select "+ colmn + ", valid_start_time ,valid_end_time from "
+		String sql_query = "select "+ colmn + ", valid_start_time ,valid_end_time,operation_caused from "
 			    + tblname + "_hist where "
 			    + " valid_start_time = (select min(valid_start_time) from "
 			    + tblname + "_hist where "
@@ -169,8 +167,8 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-	col.add(colmn);
-	Extract_ResultSet(ans, col);
+	// col.add(colmn);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 

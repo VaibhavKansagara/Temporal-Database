@@ -49,37 +49,37 @@ class TemporalPage {
 
         Last_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               Last last = new Last();
+            //    Last last = new Last();
             }          
         });
 
         Previous_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               Previous previous = new Previous();
+            //    Previous previous = new Previous();
             }          
         });
 
         Next_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               Next nxt = new Next();
+            //    Next nxt = new Next();
             }          
         });
 
         Evol_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Evol evl = new Evol();
+                // Evol evl = new Evol();
             }          
         });
 
         FirstEvol_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FirstEvol fstevl = new FirstEvol();
+                // FirstEvol fstevl = new FirstEvol();
             }          
         });
 
         LastEvol_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                LastEvol lstevl = new LastEvol();
+                // LastEvol lstevl = new LastEvol();
             }          
         });
 
@@ -96,7 +96,7 @@ class TemporalPage {
 	controlPanel.add(Evol_btn);
 	controlPanel.add(FirstEvol_btn);
 	controlPanel.add(LastEvol_btn);
-        controlPanel.add(Backbtn);
+        controlPanel.add(Back_btn);
 
         frame.setVisible(true);
     }

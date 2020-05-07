@@ -57,26 +57,25 @@ class Between_And {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("root", "root", "EMP");
+	    Database db = new Database("srikar", "Srikar@1829", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
 
             public void actionPerformed(ActionEvent e) {
 
                 ResultSet ans = temporal.Between_And(date1.getText(), date1.getText(), tablename.getText());
-                ArrayList<String> colmns = new ArrayList<String>();
+                ArrayList<String> colmns=temporal.get_Temporal_Columns(tablename.getText()+"_hist");
+                colmns.add("valid_start_time");
+                colmns.add("valid_end_time");
+                colmns.add("operation_caused");
 
-                Map <String,String> s=db.get_Columns(tablename.getText()+"_hist");
-        		for (Map.Entry<String,String> col: s.entrySet()) {
-            		colmns.add(col.getKey());
-		        }
 
                 ViewTable view = new ViewTable(ans, colmns);
             }  
         });
     }
 
-    // public static void main(String args[]){
-    //         Between_And between_And = new Between_And();
-    // }
+    public static void main(String args[]){
+             Between_And between_And = new Between_And();
+    }
 
 }

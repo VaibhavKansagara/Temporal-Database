@@ -44,7 +44,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		//Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -66,7 +66,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
             		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		//Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -88,7 +88,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		//Extract_ResultSet(ans,cols);
 		return ans;
 	}
 

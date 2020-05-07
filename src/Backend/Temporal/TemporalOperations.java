@@ -44,7 +44,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		//Extract_ResultSet(ans,cols);
+		Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -66,7 +66,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
             		cols.add(e.getKey());
 		}
-		//Extract_ResultSet(ans,cols);
+		Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -88,7 +88,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		//Extract_ResultSet(ans,cols);
+		Extract_ResultSet(ans,cols);
 		return ans;
 	}
 
@@ -670,17 +670,17 @@ public class TemporalOperations {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		ArrayList<String> colmn2= new ArrayList<String>();
-		for(int i=0;i<cols1.size();i++){
-		    colmn2.add(cols1.get(i));
-		}
-		for(int i=0;i<cols2.size();i++){
-		    if (pk.get(cols2.get(i)) == null)
-			colmn2.add(cols2.get(i));
-		}
-		colmn2.add("valid_start_time");
-		colmn2.add("valid_end_time");
-		Extract_ResultSet(ans, colmn2);
+		// ArrayList<String> colmn2= new ArrayList<String>();
+		// for(int i=0;i<cols1.size();i++){
+		//     colmn2.add(cols1.get(i));
+		// }
+		// for(int i=0;i<cols2.size();i++){
+		//     if (pk.get(cols2.get(i)) == null)
+		// 	colmn2.add(cols2.get(i));
+		// }
+		// colmn2.add("valid_start_time");
+		// colmn2.add("valid_end_time");
+		// Extract_ResultSet(ans, colmn2);
 		return ans;
 	}
 
@@ -740,17 +740,17 @@ public class TemporalOperations {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		ArrayList<String> colmn2= new ArrayList<String>();
-		for(int i=0;i<cols1.size();i++){
-		    colmn2.add(cols1.get(i));
-		}
-		for(int i=0;i<cols2.size();i++){
-		    if (pk.get(cols2.get(i)) == null)
-			colmn2.add(cols2.get(i));
-		}
-		colmn2.add("valid_start_time");
-		colmn2.add("valid_end_time");
-		Extract_ResultSet(ans, colmn2);
+		// ArrayList<String> colmn2= new ArrayList<String>();
+		// for(int i=0;i<cols1.size();i++){
+		//     colmn2.add(cols1.get(i));
+		// }
+		// for(int i=0;i<cols2.size();i++){
+		//     if (pk.get(cols2.get(i)) == null)
+		// 	colmn2.add(cols2.get(i));
+		// }
+		// colmn2.add("valid_start_time");
+		// colmn2.add("valid_end_time");
+		// Extract_ResultSet(ans, colmn2);
 		return ans;
 	}
 
@@ -810,24 +810,24 @@ public class TemporalOperations {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		ArrayList<String> colmn2= new ArrayList<String>();
-		for(int i=0;i<cols1.size();i++){
-		    colmn2.add(cols1.get(i));
-		}
-		for(int i=0;i<cols2.size();i++){
-		    if (pk.get(cols2.get(i)) == null)
-			colmn2.add(cols2.get(i));
-		}
-		colmn2.add("valid_start_time");
-		colmn2.add("valid_end_time");
-		Extract_ResultSet(ans, colmn2);
+		// ArrayList<String> colmn2= new ArrayList<String>();
+		// for(int i=0;i<cols1.size();i++){
+		//     colmn2.add(cols1.get(i));
+		// }
+		// for(int i=0;i<cols2.size();i++){
+		//     if (pk.get(cols2.get(i)) == null)
+		// 	colmn2.add(cols2.get(i));
+		// }
+		// colmn2.add("valid_start_time");
+		// colmn2.add("valid_end_time");
+		// Extract_ResultSet(ans, colmn2);
 		return ans;
 	}
 
 	public static void main(String args[]){
-		Database d = new Database("srikar", "Srikar@1829", "EMP");
+		Database d = new Database("root", "root", "EMP");
 		Map <String,String> m= new HashMap<String,String>();
-		m.put("EMP_PHN","1111111111");
+		m.put("id","103");
 		TemporalOperations temp_ops= new TemporalOperations(d);
 		//temp_ops.First("EMP_ADDR", "employee");
 		
@@ -839,7 +839,7 @@ public class TemporalOperations {
 
 		//temp_ops.Evolution(m, "EMP_ADDR", "employee");
 
-		//temp_ops.First_Evolution(m,"EMP_ADDR","employee");
+		temp_ops.First_Evolution(m,"first","Employees");
 		//temp_ops.Last_Evolution(m, "EMP_ADDR", "employee");
 		java.util.Date dt = new java.util.Date();
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("2020-05-03 14:45:00");
@@ -850,7 +850,7 @@ public class TemporalOperations {
 		String currentTime2 = sdf2.format(dt2);
 		//temp_ops.Between_And(currentTime2,currentTime,"employee");
 
-		temp_ops.History_cross_join("employee", "department");
+		// temp_ops.History_cross_join("employee", "department");
 	}
 }
  

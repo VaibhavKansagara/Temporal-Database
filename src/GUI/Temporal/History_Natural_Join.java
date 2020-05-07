@@ -28,9 +28,9 @@ class History_Natural_Join {
         Container c=frame.getContentPane();
         c.setLayout(null);
 
-        TableName1 = new JLabel("First Table Name");
+        TableName1 = new JLabel("First Table");
         tablename1 = new JTextField();
-        TableName2 = new JLabel("Second Table Name");
+        TableName2 = new JLabel("Second Table");
         tablename2 = new JTextField();
         OK= new JButton("OK");
 
@@ -49,7 +49,7 @@ class History_Natural_Join {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("srikar", "Srikar@1829", "EMP");
+	    Database db = new Database("root", "root", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
 		String tbl1 = tablename1.getText();
@@ -58,14 +58,15 @@ class History_Natural_Join {
 		ArrayList<String> colmns = new ArrayList<String>();
 
 		Map<String,String> pk = db.get_primary_key(tbl1);
-		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1+"_hist");
-		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2+"_hist");
-		for(int i=1;i<cols1.size();i++){
+		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1 + "_hist");
+		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2 + "_hist");
+		for(int i=0;i<cols1.size();i++){
 		    colmns.add(cols1.get(i));
 		}
-		for(int i=1;i<cols2.size();i++){
-		    if (pk.get(cols2.get(i)) == null)
-		   	colmns.add(cols2.get(i));
+		for(int i=0;i<cols2.size();i++){
+		    if (pk.get(cols2.get(i)) == null) {
+			   colmns.add(cols2.get(i));
+		    }
 		}
 		colmns.add("valid_start_time");
 		colmns.add("valid_end_time");

@@ -32,13 +32,13 @@ class Bet_Natural_Join {
 	Container c=frame.getContentPane();
 	c.setLayout(null);
 
-	TableName1 = new JLabel("First Table Name");
+	TableName1 = new JLabel("First Table");
 	tablename1 = new JTextField();
-	TableName2 = new JLabel("Second Table Name");
+	TableName2 = new JLabel("Second Table");
 	tablename2 = new JTextField();
-	Date1 = new JLabel("Date");
+	Date1 = new JLabel("Date1");
 	date1 = new JTextField();
-	Date2 = new JLabel("Date");
+	Date2 = new JLabel("Date2");
 	date2 = new JTextField();
 	OK= new JButton("OK");
 
@@ -48,9 +48,9 @@ class Bet_Natural_Join {
 	tablename2.setBounds(130,75,100,20);
 	Date1.setBounds(20,80,200,70);
 	date1.setBounds(130,105,100,20);
-	Date2.setBounds(20,80,200,70);
-	date2.setBounds(130,105,100,20);
-        OK.setBounds(20,140,60,20);
+	Date2.setBounds(20,110,200,70);
+	date2.setBounds(130,145,100,20);
+        OK.setBounds(20,170,60,20);
 
         c.add(TableName1);
         c.add((tablename1));
@@ -63,7 +63,7 @@ class Bet_Natural_Join {
         c.add(OK);
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("srikar", "Srikar@1829", "EMP");
+	    Database db = new Database("root", "root", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
 		String tbl1 = tablename1.getText();
@@ -81,12 +81,12 @@ class Bet_Natural_Join {
 		ArrayList<String> colmns = new ArrayList<String>();
 
 		Map<String,String> pk = db.get_primary_key(tbl1);
-		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1);
-		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2);
-		for(int i=1;i<cols1.size();i++){
+		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1 + "_hist");
+		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2 + "_hist");
+		for(int i=0;i<cols1.size();i++){
 		    colmns.add(cols1.get(i));
 		}
-		for(int i=1;i<cols2.size();i++){
+		for(int i=0;i<cols2.size();i++){
 		    if (pk.get(cols2.get(i)) == null)
 		   	colmns.add(cols2.get(i));
 		}
@@ -95,5 +95,5 @@ class Bet_Natural_Join {
 		ViewTable view = new ViewTable(ans, colmns);
             }  
          });
-    }
+	}
 }

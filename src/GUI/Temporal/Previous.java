@@ -55,7 +55,7 @@ class Previous {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("root", "root", "EMP");
+	    Database db = new Database("srikar", "Srikar@1829", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
 		ResultSet ans = temporal.Previous(columnname.getText(), tablename.getText(), value.getText());

@@ -49,7 +49,7 @@ class First {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("root", "root", "EMP");
+	    Database db = new Database("srikar", "Srikar@1829", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
 		ResultSet ans = temporal.First(columnname.getText(), tablename.getText());

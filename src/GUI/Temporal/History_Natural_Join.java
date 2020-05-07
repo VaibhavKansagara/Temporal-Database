@@ -49,7 +49,7 @@ class History_Natural_Join {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("root", "root", "EMP");
+	    Database db = new Database("srikar", "Srikar@1829", "EMP");
 	    TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
 		String tbl1 = tablename1.getText();
@@ -58,8 +58,8 @@ class History_Natural_Join {
 		ArrayList<String> colmns = new ArrayList<String>();
 
 		Map<String,String> pk = db.get_primary_key(tbl1);
-		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1);
-		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2);
+		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1+"_hist");
+		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2+"_hist");
 		for(int i=1;i<cols1.size();i++){
 		    colmns.add(cols1.get(i));
 		}

@@ -125,12 +125,19 @@ public class InsertOperation {
         row4.put("DEPT_ID", "'232'");
         row4.put("DEPT_NAME","'abc'");
         row4.put("DEPT_ADDR","'Ecity'");
-        //ins.insert(row4,tbl2);
+        ins.insert(row4,tbl2);
         
         Map <String,Object> row5= new HashMap<String,Object>();
         row5.put("DEPT_ID", "'275'");
         row5.put("DEPT_NAME","'def'");
         row5.put("DEPT_ADDR","'Silkboard'");
-        ins.insert(row5,tbl2);
+        //ins.insert(row5,tbl2);
+
+
+        Map <String,Object> row6= new HashMap<String,Object>();
+        row6.put("DEPT_ID", "'242'");
+        row6.put("DEPT_NAME","'xdxd'");
+        row6.put("DEPT_ADDR","'Whitefield'");
+        //ins.insert(row6,tbl2);
    }
 }

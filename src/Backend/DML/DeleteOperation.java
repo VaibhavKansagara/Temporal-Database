@@ -66,11 +66,11 @@ public class DeleteOperation {
         Map <String,Object> row= new HashMap<String,Object>();
         row.put("EMP_ID", "'234'");
         String tbl="employee";
-		//ins.delete(row,tbl);
+		ins.delete(row,tbl);
 		
 		Map <String,Object> row2= new HashMap<String,Object>();
         row2.put("DEPT_ID", "'275'");
         String tbl2="department";
-        ins.delete(row2,tbl2);
+        //ins.delete(row2,tbl2);
    }
 }

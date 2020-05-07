@@ -163,6 +163,6 @@ public class UpdateOperation {
         row6.put("EMP_NAME","'DEF'");
         row6.put("EMP_ADDR","'college3'");
         row6.put("EMP_PHN","9949291909");
-		upd.update(key6,row6,tbl);
+		//upd.update(key6,row6,tbl);
    }
 }

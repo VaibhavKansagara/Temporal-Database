@@ -17,7 +17,13 @@ class TemporalPage {
     private JButton FirstEvol_btn;
     private JButton LastEvol_btn;
     private JButton Back_btn;
-
+    private JButton History_Natural_Join_btn;
+    private JButton At_Natural_Join_btn;
+    private JButton Bet_Natural_Join_btn;
+    private JButton History_Cross_Join_btn;
+    private JButton At_Cross_Join_btn;
+    private JButton Bet_Cross_Join_btn;
+    private JButton Non_Temporal_Cross_Join_btn;
     public TemporalPage() {
         frame = new JFrame("Temporal Operations");
         frame.setSize(400,400);
@@ -40,7 +46,14 @@ class TemporalPage {
         FirstEvol_btn = new JButton("FirstEvolution");
         LastEvol_btn = new JButton("LastEvolution");
         Back_btn = new JButton("Back");
-
+        History_Natural_Join_btn= new JButton("HistoryNaturalJoin");
+        At_Natural_Join_btn=new JButton("AtNaturalJoin");
+        Bet_Natural_Join_btn= new JButton("BetweenNaturalJoin");
+        History_Cross_Join_btn = new JButton("HistoryCrossJoin");
+        At_Cross_Join_btn= new JButton("AtCrossJoin");
+        Bet_Cross_Join_btn = new JButton("BetweenCrossJoin");
+        Non_Temporal_Cross_Join_btn= new JButton("NonTemporalCrossJoin");
+        
         First_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                First first = new First();
@@ -88,16 +101,56 @@ class TemporalPage {
                // yet to be done.
             }          
         });
-
+        History_Natural_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        At_Natural_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        Bet_Natural_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        History_Cross_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        At_Cross_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        Bet_Cross_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
+        Non_Temporal_Cross_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+            }          
+        });
         controlPanel.add(First_btn);
         controlPanel.add(Last_btn);
         controlPanel.add(Previous_btn);
         controlPanel.add(Next_btn);
-	controlPanel.add(Evol_btn);
-	controlPanel.add(FirstEvol_btn);
-	controlPanel.add(LastEvol_btn);
+	    controlPanel.add(Evol_btn);
+	    controlPanel.add(FirstEvol_btn);
+	    controlPanel.add(LastEvol_btn);
         controlPanel.add(Back_btn);
-
+        controlPanel.add(History_Natural_Join_btn);
+        controlPanel.add(At_Natural_Join_btn);
+        controlPanel.add(Bet_Natural_Join_btn);
+        controlPanel.add(History_Cross_Join_btn);
+        controlPanel.add(At_Cross_Join_btn);
+        controlPanel.add(Bet_Cross_Join_btn);
+        controlPanel.add(Non_Temporal_Cross_Join_btn);
         frame.setVisible(true);
     }
     

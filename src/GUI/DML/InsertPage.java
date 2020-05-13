@@ -26,7 +26,8 @@ class InsertPage {
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		controlPanel = new JPanel();		controlPanel.setLayout(null);
+		controlPanel = new JPanel();
+		controlPanel.setLayout(null);
 		frame.add(controlPanel);
 
 		TableName = new JLabel("Table Name");

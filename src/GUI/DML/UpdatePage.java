@@ -16,7 +16,7 @@ class UpdatePage {
 	static JLabel TableName, ColumnNames;
 	static JTextField table_name, column_names;
 	static JPanel controlPanel;
-	static JButton OKButton, AddRows;
+	static JButton OKButton, UpdateRows;
 	static JScrollPane scrollPane;
 
 	public UpdatePage() {
@@ -49,10 +49,10 @@ class UpdatePage {
 
 		column_names = new JTextField();
 		
-		column_names.setPreferredSize(new Dimension(200, 24));
+		column_names.setPreferredSize(new Dimension(500, 24));
 		column_names.setBounds(150, 110, 500, 24);
 
-		JButton OKButton = new JButton("OK");
+		OKButton = new JButton("OK");
 		OKButton.setBounds(700, 110, 55, 24);
 
 		controlPanel.add(table_name);
@@ -100,11 +100,11 @@ class UpdatePage {
 					depth+=col_format_dimensions.height+20;
 				}
 				
-				AddRows = new JButton("Update Row of Table");
-				AddRows.setBounds(175, 520, 200, 30);
+				UpdateRows = new JButton("Update Row of Table");
+				UpdateRows.setBounds(175, 520, 200, 30);
 
-				controlPanel.add(AddRows);
-				AddRows.addActionListener(new ActionListener()
+				controlPanel.add(UpdateRows);
+				UpdateRows.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
 					{

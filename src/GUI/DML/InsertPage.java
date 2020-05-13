@@ -15,10 +15,8 @@ class InsertPage {
 	static JFrame frame;
 	static JLabel TableName;
 	static JTextField table_name;
-	static JLabel RowsList;
-	static JTextArea rows_list;
 	static JPanel controlPanel;
-	static JButton AddRows, Backbtn;
+	static JButton AddRows;
 	static JScrollPane scrollPane;
 
 	public InsertPage() {

@@ -21,7 +21,7 @@ class DeletePage {
 	static JScrollPane scrollPane;
 
 	public DeletePage() {
-		frame = new JFrame("Update Operation");
+		frame = new JFrame("Delete Operation");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -53,8 +53,6 @@ class DeletePage {
 		scrollPane = new JScrollPane(conditions_list);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		// scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
-		// scrollPane.getVerticalScrollBar().setUnitIncrement(10);
 		scrollPane.setBounds(150, 110, 500, 350);
 
 		DeleteButton = new JButton("Delete Rows of Table");
@@ -75,7 +73,6 @@ class DeletePage {
 				Map<String,Object> row_conditions=new HashMap<String,Object>();
 				col_attr_pair.forEach((pair) -> 
 					{
-						// String[] key_val = pair.split(";");
 						String[] key_val = Arrays.stream(pair.split(";")).map(String::trim).toArray(String[]::new);
 						row_conditions.put(key_val[0],"'"+key_val[1]+"'");
 					}

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import Backend.Database;
 import Backend.DML.UpdateOperation;
 
@@ -13,8 +14,8 @@ import java.util.*;
 
 class UpdatePage {
 	static JFrame frame;
-	static JLabel TableName, ColumnNames;
-	static JTextField table_name, column_names;
+	static JLabel TableName, ColumnCount;
+	static JTextField table_name, column_count;
 	static JPanel controlPanel;
 	static JButton OKButton, UpdateRows;
 	static JScrollPane scrollPane;
@@ -40,23 +41,23 @@ class UpdatePage {
 		table_name.setPreferredSize(new Dimension(200, 24));
 		table_name.setBounds(300, 60, 200, 24);
 
-		ColumnNames = new JLabel("Enter Columns to Update (comma-separated)");
+		ColumnCount = new JLabel("Enter Number of Columns to Update");
 		
-		Dimension column_names_dimensions = ColumnNames.getPreferredSize();
-		ColumnNames.setBounds(400-column_names_dimensions.width/2, 90, column_names_dimensions.width, column_names_dimensions.height);
+		Dimension column_count_dimensions = ColumnCount.getPreferredSize();
+		ColumnCount.setBounds(400-column_count_dimensions.width/2, 90, column_count_dimensions.width, column_count_dimensions.height);
 
-		controlPanel.add(ColumnNames);
+		controlPanel.add(ColumnCount);
 
-		column_names = new JTextField();
+		column_count = new JTextField();
 		
-		column_names.setPreferredSize(new Dimension(500, 24));
-		column_names.setBounds(150, 110, 500, 24);
+		column_count.setPreferredSize(new Dimension(100, 24));
+		column_count.setBounds(350, 110, 100, 24);
 
 		OKButton = new JButton("OK");
-		OKButton.setBounds(700, 110, 55, 24);
+		OKButton.setBounds(500, 110, 55, 24);
 
 		controlPanel.add(table_name);
-		controlPanel.add(column_names);
+		controlPanel.add(column_count);
 		controlPanel.add(OKButton);
 
 		OKButton.addActionListener(new ActionListener()
@@ -68,13 +69,20 @@ class UpdatePage {
 				
 				JLabel pkLabel = new JLabel(db.get_primary_key(tbl_nm).entrySet().iterator().next().getKey());
 				
-				ArrayList<String> cols = new ArrayList<String>(Arrays.asList(column_names.getText().split(", ")));
-				ArrayList<JLabel> colLabels = new ArrayList<JLabel>();
-				cols.forEach((col) -> colLabels.add(new JLabel(col)));
-				int maxdim=pkLabel.getPreferredSize().width;
-				for(JLabel colLabel : colLabels)
+				String[] col_nms = db.get_Columns(tbl_nm).keySet().toArray(new String[0]);
+				// ArrayList<String> cols = new ArrayList<String>(Arrays.asList(col_nms));
+				ArrayList<JComboBox> combBoxes = new ArrayList<JComboBox>();
+				int clmn_cnt = Integer.parseInt(column_count.getText());
+				for(int i=0;i<clmn_cnt;i++)
 				{
-					maxdim=java.lang.Math.max(maxdim,colLabel.getPreferredSize().width);
+					JComboBox cb = new JComboBox(col_nms);
+					// cb.setPreferredSize(new Dimension(150,24));
+					combBoxes.add(cb);
+				}
+				int maxdim=pkLabel.getPreferredSize().width;
+				for(JComboBox combBox : combBoxes)
+				{
+					maxdim=java.lang.Math.max(maxdim,combBox.getPreferredSize().width);
 				}
 				
 				Dimension pk_format_dimensions = pkLabel.getPreferredSize();
@@ -87,14 +95,14 @@ class UpdatePage {
 				
 				ArrayList<JTextField> colAttr=new ArrayList<JTextField>();
 				int depth=pk_format_dimensions.height+200;
-				for(int i=0;i<colLabels.size();i++)
+				for(int i=0;i<combBoxes.size();i++)
 				{
-					Dimension col_format_dimensions = colLabels.get(i).getPreferredSize();
-					colLabels.get(i).setBounds(50, depth, col_format_dimensions.width, col_format_dimensions.height);
-					controlPanel.add(colLabels.get(i));
+					Dimension col_format_dimensions = combBoxes.get(i).getPreferredSize();
+					combBoxes.get(i).setBounds(50, depth, col_format_dimensions.width, col_format_dimensions.height);
+					controlPanel.add(combBoxes.get(i));
 					JTextField attr = new JTextField();
 					attr.setPreferredSize(new Dimension(500, 24));
-					attr.setBounds(100+maxdim, depth+12-col_format_dimensions.height, 500, 24);
+					attr.setBounds(100+maxdim, depth, 500, 24);
 					colAttr.add(attr);
 					controlPanel.add(attr);
 					depth+=col_format_dimensions.height+20;
@@ -110,9 +118,9 @@ class UpdatePage {
 					{
 						Map<String,Object> key=new HashMap<String,Object>(), row=new HashMap<String,Object>();
 						key.put(pkLabel.getText(),"'"+pkVal.getText()+"'");
-						for(int i=0;i<cols.size();i++)
+						for(int i=0;i<clmn_cnt;i++)
 						{
-							row.put(colLabels.get(i).getText(),"'"+colAttr.get(i).getText()+"'");
+							row.put(String.valueOf(combBoxes.get(i).getSelectedItem()),"'"+colAttr.get(i).getText()+"'");
 						}
 						UpdateOperation upd=new UpdateOperation(db);
 						upd.update(key,row,tbl_nm);

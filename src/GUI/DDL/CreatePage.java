@@ -37,6 +37,7 @@ class CreatePage {
     static ArrayList<String> temporal_columns=new ArrayList<String>();
     static ArrayList<String> length_string_list=new ArrayList<String>();
     static ArrayList<String> temporal_columns2=new ArrayList<String>();
+    Database db= new Database("srikar","Srikar@1829","EMP");
     String main_table="";
     public CreatePage() {
         frame= new JFrame("New Table");
@@ -70,7 +71,19 @@ class CreatePage {
         Referencing.setBounds(580,135,100,20);
         Temporal.setBounds(700,135,100,20);
         OK.setBounds(220,95,70,20);
-
+        
+        Vector<String> v1=new Vector<String>();
+        v1.add("NONE");
+        ArrayList<String> arr1= db.get_tables();
+        String s="hist";
+        System.out.println(arr1.size());
+        for (int j=0;j<arr1.size();j++){
+            
+            if((arr1.get(j).substring(arr1.get(j).length()-4, arr1.get(j).length())).equals(s)){
+                continue;
+            }
+            v1.add(arr1.get(j));
+        }
         OK.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
                ButtonGroup grp=new ButtonGroup();
@@ -100,8 +113,9 @@ class CreatePage {
                         primarykey_list.add(primarykey);
                         grp.add(primarykey);
                         
-                        String[] arr2={"NONE"};
-                        JComboBox<String> referencing= new JComboBox<>(arr2);
+                       
+
+                        JComboBox<String> referencing= new JComboBox<>(v1);
                         referencing.setEditable(true);
                         referencing.setBounds(580,175+(40*i),90,20);
                         referencing_list.add(referencing);
@@ -157,9 +171,32 @@ class CreatePage {
 				keys = keys.substring(0,ind);
 				keys=keys+") ";
 				
-                String last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+"\n"+");"+"\n\n";
-                main_table=main_table+last_line;
+                String before_last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+",\n";
+                main_table=main_table+before_last_line;
+                
+                for(int k=0;k<referencing_list.size();k++){
+                    if(referencing_list.get(k).getSelectedItem()!="NONE"){
+                        Map<String,String> m1= db.get_primary_key(referencing_list.get(k).getSelectedItem().toString());
+                        int count=0;
+                        String s1="";
+                        for (Map.Entry<String,String> ed: m1.entrySet()) {
+                            s1+= ed.getKey();
+                            count++;
+                            if(count==1){
+                                break;
+                            }
+                        }
+                        main_table+= "FOREIGN KEY(";
+                        main_table+= name_list.get(k).getText()+") "+ "REFERENCES "+
+                        referencing_list.get(k).getSelectedItem()+"("+s1+")\n";
+                        main_table+="ON DELETE CASCADE);\n\n";
+                    }
+                }
+                
+
+               
                 query.append(main_table);
+                System.out.println(main_table);
 				//query.append(last_line);
                 //query.append(");");
                 //query.append("\n\n");
@@ -174,7 +211,7 @@ class CreatePage {
         ExecuteQuery.setBounds(200,215+(40*i),150,20);
         ExecuteQuery.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {     
-            Database db= new Database("srikar","Srikar@1829","EMP");
+           
             CreateOperation op= new CreateOperation(db);
             op.create_table(main_table);
             Map<String,String> cols = new HashMap<String,String>();

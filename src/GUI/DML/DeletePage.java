@@ -41,7 +41,7 @@ class DeletePage {
 		table_name.setPreferredSize(new Dimension(200, 24));
 		table_name.setBounds(300, 60, 200, 24);
 
-		Conditions = new JLabel("Enter Conditions of Rows to Delete");
+		Conditions = new JLabel("Enter Keys to Delete");
 		
 		Dimension condition_dimensions = Conditions.getPreferredSize();
 		Conditions.setBounds(400-condition_dimensions.width/2, 90, condition_dimensions.width, condition_dimensions.height);
@@ -69,12 +69,12 @@ class DeletePage {
 				Database db = new Database("srikar","Srikar@1829","EMP");
 				String tbl_nm = table_name.getText();
 				
-				ArrayList<String> col_attr_pair=new ArrayList<String>(Arrays.asList(conditions_list.getText().split("\\r?\\n")));
+				ArrayList<String> pks=new ArrayList<String>(Arrays.asList(conditions_list.getText().split("\\r?\\n")));
 				Map<String,Object> row_conditions=new HashMap<String,Object>();
-				col_attr_pair.forEach((pair) -> 
+				String pk_nm = db.get_primary_key(tbl_nm).entrySet().iterator().next().getKey();
+				pks.forEach((pk) -> 
 					{
-						String[] key_val = Arrays.stream(pair.split(";")).map(String::trim).toArray(String[]::new);
-						row_conditions.put(key_val[0],"'"+key_val[1]+"'");
+						row_conditions.put(pk_nm,"'"+pk+"'");
 					}
 				);
 				DeleteOperation del = new DeleteOperation(db);

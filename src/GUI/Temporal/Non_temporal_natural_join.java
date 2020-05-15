@@ -26,7 +26,7 @@ class Non_temporal_natural_join {
 
 
     public Non_temporal_natural_join(){
-        frame = new JFrame("non temporal cross join");
+        frame = new JFrame("non temporal natural join");
         frame.setBounds(400,400,900,800);
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

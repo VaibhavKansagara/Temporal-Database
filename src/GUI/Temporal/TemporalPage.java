@@ -30,17 +30,14 @@ class TemporalPage {
     private JButton History_btn;
     private JButton At_btn;
     private JButton Between_And_btn;
-<<<<<<< HEAD
     private JButton History_Natural_Join_btn2;
     private JButton At_Natural_Join_btn2;
     private JButton Bet_Natural_Join_btn2;
     private JButton Non_temporal_natural_join;
 
 
-=======
     private JButton When_Cross_Join_btn;
     private JButton When_Cross_Join2_btn;
->>>>>>> f81e865949dd2cd934ee63208eea746d5553f316
     public TemporalPage() {
         frame = new JFrame("Temporal Operations");
         frame.setSize(400,400);
@@ -291,6 +288,11 @@ class TemporalPage {
         controlPanel.add(Bet_Cross_Join2_btn);
         controlPanel.add(When_Cross_Join_btn);
         controlPanel.add(When_Cross_Join2_btn);
+        controlPanel.add(Non_temporal_natural_join);
+        controlPanel.add(History_Natural_Join_btn2);
+        controlPanel.add(At_Natural_Join_btn2);
+        controlPanel.add(Bet_Natural_Join_btn2);
+
 
         frame.setVisible(true);
     }

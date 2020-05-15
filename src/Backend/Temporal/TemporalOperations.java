@@ -44,7 +44,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		// Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -66,7 +66,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
             		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		// Extract_ResultSet(ans,cols);
 		return ans;
 	}
 	
@@ -88,7 +88,7 @@ public class TemporalOperations {
 		for (Map.Entry<String,String> e: s.entrySet()) {
         		cols.add(e.getKey());
 		}
-		Extract_ResultSet(ans,cols);
+		// Extract_ResultSet(ans,cols);
 		return ans;
 	}
 
@@ -113,7 +113,7 @@ public class TemporalOperations {
     public ResultSet Last(String colmn, String tblname) {
 	ResultSet ans = null;
 	// ArrayList<String> col = new ArrayList<String>();
-	String sql_query = "select distinct "+ colmn + ",valid_start_time,valid_end_time,operation_caused from " +
+	String sql_query = "select "+ colmn + ",valid_start_time,valid_end_time,operation_caused from " +
 			   tblname + "_hist where ";
 	sql_query += "valid_start_time = (select max(valid_start_time) from "
 		     + tblname + "_hist)";
@@ -791,7 +791,8 @@ public class TemporalOperations {
 
 		ResultSet ans = null;
 
-		Map<String,String> pk = db.get_primary_key(table);
+		Map<String,String> pk = db.get_primary_key("department");
+
 
 
 		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
@@ -810,19 +811,20 @@ public class TemporalOperations {
 			}
 		}
 
-		sql_query += temporal_table + ".valid_start_time as valid_start_time, "+ 
-					temporal_table + ".valid_end_time as valid_end_time ";
+		sql_query += ", "+temporal_table + "_hist.valid_start_time as valid_start_time, "+ 
+					temporal_table + "_hist.valid_end_time as valid_end_time from "+table+","+temporal_table+"_hist where ";
 
 		boolean first = true;
 		for (Map.Entry<String,String> e: pk.entrySet()) {
 			if (first) {
 				first = false;
-				sql_query += table + "." + e.getKey() + "=" + temporal_table + "." + e.getKey();
+				sql_query += table + "." + e.getKey() + "=" + temporal_table + "_hist." + e.getKey();
 			} else {
-				sql_query += " and " + table + "." + e.getKey() + "=" + temporal_table + "." + e.getKey();;
+				sql_query += " and " + table + "." + e.getKey() + "=" + temporal_table + "_hist." + e.getKey();;
 			}
 		}
 
+		System.out.print(sql_query);
 
 		try {
 			stmt = db.get_connection().prepareStatement(sql_query);
@@ -843,7 +845,8 @@ public class TemporalOperations {
 
 	public ResultSet At_Natural_join2(String table , String temporal_table, String date) {
 		ResultSet ans = null;
-		Map<String,String> pk = db.get_primary_key(table);
+		// Map<String,String> pk = db.get_primary_key(table);
+		Map<String,String> pk = db.get_primary_key("department");
 		
 		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
 		Map <String,String> s1=db.get_Columns(table);
@@ -861,13 +864,13 @@ public class TemporalOperations {
 			}
 		}
 
-		sql_query +=  "t1.valid_start_time as valid_start_time, "+ 
-					 "t1.valid_end_time as valid_end_time from (";
+		sql_query +=  ", t1.valid_start_time as valid_start_time, "+ 
+					 "t1.valid_end_time as valid_end_time from "+table+", (";
 			     
-		sql_query += "(select * from "+ temporal_table+ " where "
+		sql_query += "(select * from "+ temporal_table+ "_hist where "
 			  +  "valid_start_time " + "<= '"+ date+"' "
 			  +  " and ( valid_end_time " + ">= '"+date+"' " + " or " 
-			  +  "valid_end_time " + "is null )) as t1) ";
+			  +  "valid_end_time " + "is null )) as t1) where ";
 
 
 		boolean first = true;
@@ -879,6 +882,9 @@ public class TemporalOperations {
 				sql_query += " and " + table+"." + e.getKey() + "=t1." + e.getKey();
 			}
 		}
+
+		System.out.print(sql_query);
+
 		try {
 			stmt = db.get_connection().prepareStatement(sql_query);
 			ans = stmt.executeQuery(); 
@@ -899,7 +905,7 @@ public class TemporalOperations {
 
 	public ResultSet Between_Natural_join2(String table , String temporal_table, String date1, String date2) {
 		ResultSet ans = null;
-		Map<String,String> pk = db.get_primary_key(table);
+		Map<String,String> pk = db.get_primary_key("department");
 
 		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
 		Map <String,String> s1=db.get_Columns(table);
@@ -917,14 +923,14 @@ public class TemporalOperations {
 			}
 		}
 
-		sql_query += "t1.valid_start_time as valid_start_time, "+ 
-					"t1.valid_end_time as valid_end_time from (";
+		sql_query += ", t1.valid_start_time as valid_start_time, "+ 
+					"t1.valid_end_time as valid_end_time from "+table+", (";
 			     
 
-		sql_query += "(select * from "+ temporal_table+ " where "
+		sql_query += "(select * from "+ temporal_table+ "_hist where "
 			  +  "valid_start_time " + "<= '"+ date2 + "' "
 			  +  " and ( valid_end_time " + ">= '" + date1 + "' " + " or " 
-			  +  "valid_end_time " + "is null )) as t1) ";
+			  +  "valid_end_time " + "is null )) as t1) where ";
 
 
 		boolean first = true;
@@ -936,6 +942,8 @@ public class TemporalOperations {
 				sql_query += " and " + table+"." + e.getKey() + "=t1." + e.getKey();
 			}
 		}
+
+		System.out.print(sql_query);
 
 
 		try {

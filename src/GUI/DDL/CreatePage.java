@@ -171,7 +171,19 @@ class CreatePage {
 				keys = keys.substring(0,ind);
 				keys=keys+") ";
 				
-                String before_last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys+",\n";
+                String before_last_line="CONSTRAINT "+ "pk_"+tablename.getText()+" PRIMARY KEY "+keys;//+",\n";
+
+                int temp_k;
+                for(temp_k=0;temp_k<referencing_list.size();temp_k++){
+                    if(referencing_list.get(temp_k).getSelectedItem()!="NONE"){
+                        before_last_line+=",\n";
+                        break;
+                    }
+                }   
+                if(temp_k==referencing_list.size()){
+                        before_last_line+=");";
+                }             
+
                 main_table=main_table+before_last_line;
                 
                 for(int k=0;k<referencing_list.size();k++){

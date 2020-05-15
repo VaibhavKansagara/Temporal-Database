@@ -13,7 +13,7 @@ import Backend.Temporal.*;
 import GUI.ViewTable;
 
 class Evol{
-    Database db= new Database("srikar", "Srikar@1829","EMP");
+    Database db= new Database("root", "root","EMP");
     static JFrame frame;
     static JLabel TableName;
     static JTextField tablename;
@@ -27,13 +27,14 @@ class Evol{
     static JLabel Value;
     static JTextField value;
     static JButton Run;
+    static JButton Back;
     static Map<String,Object> key_val;
     static ArrayList<JComboBox<String>> columns2= new ArrayList<JComboBox<String>>();
     static ArrayList<JTextField> values=new ArrayList<JTextField>();
     public Evol(){
         frame = new JFrame("Evolution");
         frame.setBounds(400,400,900,800);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         Container c=frame.getContentPane();
         c.setLayout(null);
@@ -45,6 +46,7 @@ class Evol{
         KeyCount = new JLabel("number of keys");
         key_no = new JTextField();
         OK= new JButton("OK");
+        Back= new JButton("Back");
 
         TableName.setBounds(20,20,100,70);
         tablename.setBounds(120,45,100,20);
@@ -53,6 +55,7 @@ class Evol{
         KeyCount.setBounds(20,100,150,20);
         key_no.setBounds(140,100,30,20);
         OK.setBounds(20,140,60,20);
+        Back.setBounds(170,170,100,20);
 
 
         c.add(TableName);
@@ -62,6 +65,7 @@ class Evol{
         c.add(KeyCount);
         c.add(key_no);
         c.add(OK);
+        c.add(Back);
 
 
         OK.addActionListener(new ActionListener(){
@@ -69,9 +73,9 @@ class Evol{
                 int count= Integer.parseInt(key_no.getText());
                 Map<String,String> key_val= new HashMap<String,String>();
                 int i=0;
+                Vector<String> v=new Vector<String>();
                 for(i=0;i<count;i++){
                     Map<String,String> m=db.get_Columns(tablename.getText()+"_hist");
-                    Vector<String> v=new Vector<String>();
                     for (Map.Entry<String,String> ed: m.entrySet()) {
                         v.add(ed.getKey());
                 }
@@ -104,23 +108,23 @@ class Evol{
                         }
                         ResultSet rs=null;
                         rs=temp_op.Evolution(key_val,columnname.getText(),tablename.getText());
-                        col.add(columnname.getText());
-                        col.add("valid_start_time");
-                        col.add("valid_end_time");
+                        for (int j=0; j< v.size();j++) {
+                            col.add(v.get(j));
+                        }
                         ViewTable view = new ViewTable(rs,col);
-                        temp_op.Extract_ResultSet(rs,col);
                     }
                 });
-
-
-
-
-
                 c.add(Run);
                 c.add(column_name);
                 c.add(Value);
             }  
          });
+
+         Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }  
+             });
     }
     public static void main(String args[]){
         Evol evolution = new Evol();

@@ -23,7 +23,7 @@ class History_Natural_Join {
     public History_Natural_Join(){
         frame = new JFrame("History_Natural_Join Operation");
         frame.setBounds(400,400,900,800);
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
         Container c=frame.getContentPane();
         c.setLayout(null);
@@ -49,28 +49,28 @@ class History_Natural_Join {
 
 
         OK.addActionListener(new ActionListener() {
-	    Database db = new Database("root", "root", "EMP");
-	    TemporalOperations temporal = new TemporalOperations(db);
+        Database db = new Database("root", "root", "EMP");
+        TemporalOperations temporal = new TemporalOperations(db);
             public void actionPerformed(ActionEvent e) {
-		String tbl1 = tablename1.getText();
-		String tbl2 = tablename2.getText();
-		ResultSet ans = temporal.History_Natural_join(tbl1, tbl2);
-		ArrayList<String> colmns = new ArrayList<String>();
+        String tbl1 = tablename1.getText();
+        String tbl2 = tablename2.getText();
+        ResultSet ans = temporal.History_Natural_join(tbl1, tbl2);
+        ArrayList<String> colmns = new ArrayList<String>();
 
-		Map<String,String> pk = db.get_primary_key(tbl1);
-		ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1 + "_hist");
-		ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2 + "_hist");
-		for(int i=0;i<cols1.size();i++){
-		    colmns.add(cols1.get(i));
-		}
-		for(int i=0;i<cols2.size();i++){
-		    if (pk.get(cols2.get(i)) == null) {
-			   colmns.add(cols2.get(i));
-		    }
-		}
-		colmns.add("valid_start_time");
-		colmns.add("valid_end_time");
-		ViewTable view = new ViewTable(ans, colmns);
+        Map<String,String> pk = db.get_primary_key(tbl1);
+        ArrayList <String> cols1 = temporal.get_Temporal_Columns(tbl1 + "_hist");
+        ArrayList <String> cols2 = temporal.get_Temporal_Columns(tbl2 + "_hist");
+        for(int i=0;i<cols1.size();i++){
+            colmns.add(cols1.get(i));
+        }
+        for(int i=0;i<cols2.size();i++){
+            if (pk.get(cols2.get(i)) == null) {
+               colmns.add(cols2.get(i));
+            }
+        }
+        colmns.add("valid_start_time");
+        colmns.add("valid_end_time");
+        ViewTable view = new ViewTable(ans, colmns);
             }  
          });
     }

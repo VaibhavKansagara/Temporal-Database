@@ -203,7 +203,7 @@ public class TemporalOperations {
     public ResultSet First_Evolution(Map<String,String> key, String colmn, String tblname) {
 	ResultSet ans = null;
 	ArrayList<String> col = new ArrayList<String>();
-	String sql_query = "select "+ colmn + ",valid_start_time,valid_end_time from " +
+	String sql_query = "select * from " +
 				tblname + "_hist where ";
 
 	boolean first = true;
@@ -234,15 +234,15 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-	col.add(colmn);
-	Extract_ResultSet(ans, col);
+	// col.add(colmn);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 
     public ResultSet Last_Evolution(Map<String,String> key, String colmn, String tblname) {
 	ResultSet ans = null;
 	ArrayList<String> col = new ArrayList<String>();
-	String sql_query = "select "+ colmn + ",valid_start_time,valid_end_time from " +
+	String sql_query = "select * from " +
 				   tblname + "_hist where ";
 	
 	boolean first = true;
@@ -273,7 +273,7 @@ public class TemporalOperations {
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-	Extract_ResultSet(ans, col);
+	// Extract_ResultSet(ans, col);
 	return ans;
     }
 

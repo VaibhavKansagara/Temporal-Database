@@ -22,7 +22,7 @@ public class ViewTable {
 		frame = new JFrame();
 		frame.setVisible(true);
 		frame.setBounds(100, 100, 1000, 1000);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		tb = new JTable();
 		DefaultTableModel dtm = new DefaultTableModel(0,0);

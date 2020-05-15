@@ -27,7 +27,7 @@ class Bet_Natural_Join {
     public Bet_Natural_Join(){
 	frame = new JFrame("Bet_Natural_Join Operation");
 	frame.setBounds(400,400,900,800);
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	frame.setVisible(true);
 	Container c=frame.getContentPane();
 	c.setLayout(null);
@@ -50,7 +50,7 @@ class Bet_Natural_Join {
 	date1.setBounds(130,105,100,20);
 	Date2.setBounds(20,110,200,70);
 	date2.setBounds(130,145,100,20);
-        OK.setBounds(20,170,60,20);
+	OK.setBounds(20,170,60,20);
 
         c.add(TableName1);
         c.add((tablename1));
@@ -60,7 +60,7 @@ class Bet_Natural_Join {
 	c.add(date1);
 	c.add(Date2);
 	c.add(date2);
-        c.add(OK);
+	c.add(OK);
 
         OK.addActionListener(new ActionListener() {
 	    Database db = new Database("root", "root", "EMP");
@@ -94,6 +94,6 @@ class Bet_Natural_Join {
 		colmns.add("valid_end_time");
 		ViewTable view = new ViewTable(ans, colmns);
             }  
-         });
+	 });
 	}
 }

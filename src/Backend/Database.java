@@ -37,7 +37,7 @@ public class Database {
     public ArrayList<String> get_tables() {
 	ArrayList<String> tables = new ArrayList<String>();
 	String sql_query = "select table_name FROM information_schema.tables where table_type = 'BASE TABLE' "
-		    + "table_schema = " + "'"+dbname+"'";
+		    + " and table_schema = " + "'"+dbname+"'";
 
         try {
 	    stmt = connection.prepareStatement(sql_query);

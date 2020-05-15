@@ -21,18 +21,26 @@ class TemporalPage {
     private JButton At_Natural_Join_btn;
     private JButton Bet_Natural_Join_btn;
     private JButton History_Cross_Join_btn;
+    private JButton History_Cross_Join2_btn;
     private JButton At_Cross_Join_btn;
     private JButton Bet_Cross_Join_btn;
+    private JButton At_Cross_Join2_btn;
+    private JButton Bet_Cross_Join2_btn;
     private JButton Non_Temporal_Cross_Join_btn;
     private JButton History_btn;
     private JButton At_btn;
     private JButton Between_And_btn;
+<<<<<<< HEAD
     private JButton History_Natural_Join_btn2;
     private JButton At_Natural_Join_btn2;
     private JButton Bet_Natural_Join_btn2;
     private JButton Non_temporal_natural_join;
 
 
+=======
+    private JButton When_Cross_Join_btn;
+    private JButton When_Cross_Join2_btn;
+>>>>>>> f81e865949dd2cd934ee63208eea746d5553f316
     public TemporalPage() {
         frame = new JFrame("Temporal Operations");
         frame.setSize(400,400);
@@ -70,9 +78,13 @@ class TemporalPage {
 
         Non_temporal_natural_join = new JButton("Nontemporalnaturaljoin");
         History_Cross_Join_btn = new JButton("HistoryCrossJoin");
+        History_Cross_Join2_btn = new JButton("HistoryCrossJoin2");
         At_Cross_Join_btn= new JButton("AtCrossJoin");
         Bet_Cross_Join_btn = new JButton("BetweenCrossJoin");
-       
+        At_Cross_Join2_btn= new JButton("AtCrossJoin2");
+        Bet_Cross_Join2_btn = new JButton("BetweenCrossJoin2");
+        When_Cross_Join_btn = new JButton("WhenCrossJoin");
+        When_Cross_Join2_btn = new JButton("WhenCrossJoin2");
        
         First_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -213,6 +225,12 @@ class TemporalPage {
                History_Cross_Join his_cross= new History_Cross_Join();
             }          
         });
+        History_Cross_Join2_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               History_Cross_Join2 his_cross2= new History_Cross_Join2();
+            }          
+        });
         At_Cross_Join_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                // yet to be done.
@@ -223,6 +241,30 @@ class TemporalPage {
             public void actionPerformed(ActionEvent e) {
                // yet to be done.
                Between_And_Cross_Join bet_cross= new Between_And_Cross_Join();
+            }          
+        });
+        At_Cross_Join2_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               At_Cross_Join at_cross2= new At_Cross_Join();
+            }          
+        });
+        Bet_Cross_Join2_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               Between_And_Cross_Join bet_cross2= new Between_And_Cross_Join();
+            }          
+        });
+        When_Cross_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               When_Cross_Join when_cross= new When_Cross_Join();
+            }          
+        });
+        When_Cross_Join2_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               When_Cross_Join2 when_cross2= new When_Cross_Join2();
             }          
         });
        
@@ -242,9 +284,14 @@ class TemporalPage {
         controlPanel.add(At_Natural_Join_btn);
         controlPanel.add(Bet_Natural_Join_btn);
         controlPanel.add(History_Cross_Join_btn);
+        controlPanel.add(History_Cross_Join2_btn);
         controlPanel.add(At_Cross_Join_btn);
         controlPanel.add(Bet_Cross_Join_btn);
-       
+        controlPanel.add(At_Cross_Join2_btn);
+        controlPanel.add(Bet_Cross_Join2_btn);
+        controlPanel.add(When_Cross_Join_btn);
+        controlPanel.add(When_Cross_Join2_btn);
+
         frame.setVisible(true);
     }
     public static void main(String args[]){

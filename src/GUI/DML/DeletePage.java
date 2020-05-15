@@ -72,13 +72,13 @@ class DeletePage {
 				ArrayList<String> pks=new ArrayList<String>(Arrays.asList(conditions_list.getText().split("\\r?\\n")));
 				Map<String,Object> row_conditions=new HashMap<String,Object>();
 				String pk_nm = db.get_primary_key(tbl_nm).entrySet().iterator().next().getKey();
+				DeleteOperation del = new DeleteOperation(db);
 				pks.forEach((pk) -> 
 					{
 						row_conditions.put(pk_nm,"'"+pk+"'");
+						del.delete(row_conditions,tbl_nm);
 					}
 				);
-				DeleteOperation del = new DeleteOperation(db);
-				del.delete(row_conditions,tbl_nm);
 			}
 		});
 

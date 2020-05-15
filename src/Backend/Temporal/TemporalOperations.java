@@ -379,7 +379,6 @@ public class TemporalOperations {
 		return ans;
 	}
 
-
 public ResultSet when_cross_join(String tbl1, String tbl2,Map<String,String> m1,Map<String,String> m2){
 		ResultSet ans=null;
 		ArrayList <String> cols1= get_Temporal_Columns(tbl1+"_hist");
@@ -432,31 +431,27 @@ public ResultSet when_cross_join(String tbl1, String tbl2,Map<String,String> m1,
 	}
 
 
-public ResultSet when_cross_join(String tbl1, String tbl2,Map<String,String> m1,Map<String,String> m2){
-		ResultSet ans=null;
-		ArrayList <String> cols1= get_Temporal_Columns(tbl1+"_hist");
-		ArrayList <String> cols2= get_Temporal_Columns(tbl2+"_hist");
+public ResultSet when_cross_join2(String temporal_table,String table,Map<String,String> m1, Map<String,String> m2){
+			ResultSet ans=null;
+		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
+		Map <String,String> s1=db.get_Columns(table);
+		ArrayList <String> cols1= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+        		cols1.add(e.getKey());
+		}
+		String sql_query= "select "+table+"."+cols1.get(0);
+		for(int i=1;i<cols1.size();i++){
+			sql_query+=" , "+cols1.get(i);
+		}
+		for(int i=0;i<a1.size();i++){
+		    sql_query+=", "+a1.get(i);
+		}
+		sql_query+= " , "+temporal_table +"_hist"+ ".valid_start_time as valid_start_time, "
+		+temporal_table+"_hist"+".valid_end_time as valid_end_time from "
+		+temporal_table+"_hist"+" , "+table;
 		
+		sql_query+=" where ";
 
-		String sql_query = "select GREATEST(" + tbl1+"_hist"+ ".valid_start_time ," + tbl2 +
-		"_hist"+ ".valid_start_time) as valid_start_time" ;
-		for(int i=0;i<cols1.size();i++){
-		    sql_query+=", "+cols1.get(i);
-		}
-		for(int i=0;i<cols2.size();i++){
-		    sql_query+=", "+cols2.get(i);
-		}
-		sql_query += ", LEAST(IFNULL("+tbl1+"_hist"+".valid_end_time, "+tbl2+"_hist"+".valid_end_time) , " +
-			     "IFNULL("+tbl2+"_hist"+".valid_end_time, "+tbl1 +"_hist"+
-			     ".valid_end_time)) as valid_end_time from "+ tbl1 +"_hist"+
-				 ", " + tbl2 +"_hist";
-				 
-		sql_query+=" where "+ "(("+tbl1+"_hist"+".valid_end_time > " +
-			     tbl2 +"_hist"+".valid_start_time)" + "or ("+tbl1+"_hist"+".valid_end_time is null)) and" +
-			     "(("+tbl2+"_hist"+".valid_end_time > "+tbl1+"_hist"+".valid_start_time)" + 
-				 "or ("+tbl2+"_hist"+".valid_end_time is null))";
-				 
-		sql_query+= " and ";
 		for (Map.Entry<String,String> e: m1.entrySet()) {
 		    sql_query+=(e.getKey())+" = '"+e.getValue()+"' and ";
 		}
@@ -464,24 +459,23 @@ public ResultSet when_cross_join(String tbl1, String tbl2,Map<String,String> m1,
 		    sql_query+=(e.getKey())+" = '"+e.getValue()+"' and ";
 		}
 		sql_query+= " '1'>'0' " ;
+		//System.out.println(sql_query);
 		try {
 			stmt = db.get_connection().prepareStatement(sql_query);
 			ans = stmt.executeQuery(); 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		ArrayList<String> colmn2= new ArrayList<String>();
-		for(int i=0;i<cols1.size();i++){
-		    colmn2.add(cols1.get(i));
+		for(int i=0;i<a1.size();i++){
+			cols1.add(a1.get(i));
 		}
-		for(int i=0;i<cols2.size();i++){
-		    colmn2.add(cols2.get(i));
-		}
-		colmn2.add("valid_start_time");
-		colmn2.add("valid_end_time");
-		//Extract_ResultSet(ans, colmn2);
-		return ans;
-	}
+		cols1.add("valid_start_time");
+		cols1.add("valid_end_time");
+		//Extract_ResultSet(ans,cols1);
+			return ans;
+ 		}
+
+
 
 	public ResultSet At_cross_join(String tbl1,String tbl2,String dat){
 		ResultSet ans=null;
@@ -726,6 +720,214 @@ public ResultSet when_cross_join(String tbl1, String tbl2,Map<String,String> m1,
 		//Extract_ResultSet(ans,cols1);
 		return ans;
 	}
+
+
+
+	public ResultSet non_temporal_natural_join(String tbl1,String tbl2,String col1,String col2){
+
+		ResultSet ans= null;
+		Map <String,String> s1=db.get_Columns(tbl1);
+		ArrayList <String> cols1= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+        		cols1.add(e.getKey());
+		}
+		Map <String,String> s2=db.get_Columns(tbl2);
+		for (Map.Entry<String,String> e: s2.entrySet()) {
+        		cols1.add(e.getKey());
+		}
+		String sql_query= "select "+tbl1+"."+cols1.get(0);
+		for(int i=1;i<cols1.size();i++){
+			sql_query+=" , "+cols1.get(i);
+		}
+		sql_query+=" from "+tbl1+" , "+tbl2+" where "+tbl1+"."+col1+"="+tbl2+"."+col2;
+		//System.out.println(sql_query);
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ans;
+	}
+
+
+	public ResultSet History_Natural_join2(String table , String temporal_table){
+
+		ResultSet ans = null;
+
+		Map<String,String> pk = db.get_primary_key(table);
+
+
+		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
+		Map <String,String> s1=db.get_Columns(table);
+		ArrayList <String> cols1= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+				cols1.add(e.getKey());
+		}
+		String sql_query= "select "+table+"."+cols1.get(0);
+		for(int i=1;i<cols1.size();i++){
+			sql_query+=" , "+cols1.get(i);
+		}
+		for(int i=0;i<a1.size();i++){
+			if(pk.get(a1.get(i)) == null){
+				sql_query+=", "+a1.get(i);
+			}
+		}
+
+		sql_query += temporal_table + ".valid_start_time as valid_start_time, "+ 
+					temporal_table + ".valid_end_time as valid_end_time ";
+
+		boolean first = true;
+		for (Map.Entry<String,String> e: pk.entrySet()) {
+			if (first) {
+				first = false;
+				sql_query += table + "." + e.getKey() + "=" + temporal_table + "." + e.getKey();
+			} else {
+				sql_query += " and " + table + "." + e.getKey() + "=" + temporal_table + "." + e.getKey();;
+			}
+		}
+
+
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ans;
+
+	}
+
+
+
+
+
+
+
+	public ResultSet At_Natural_join2(String table , String temporal_table, String date) {
+		ResultSet ans = null;
+		Map<String,String> pk = db.get_primary_key(table);
+		
+		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
+		Map <String,String> s1=db.get_Columns(table);
+		ArrayList <String> cols1= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+				cols1.add(e.getKey());
+		}
+		String sql_query= "select "+table+"."+cols1.get(0);
+		for(int i=1;i<cols1.size();i++){
+			sql_query+=" , "+cols1.get(i);
+		}
+		for(int i=0;i<a1.size();i++){
+			if(pk.get(a1.get(i)) == null){
+				sql_query+=", "+a1.get(i);
+			}
+		}
+
+		sql_query +=  "t1.valid_start_time as valid_start_time, "+ 
+					 "t1.valid_end_time as valid_end_time from (";
+			     
+		sql_query += "(select * from "+ temporal_table+ " where "
+			  +  "valid_start_time " + "<= '"+ date+"' "
+			  +  " and ( valid_end_time " + ">= '"+date+"' " + " or " 
+			  +  "valid_end_time " + "is null )) as t1) ";
+
+
+		boolean first = true;
+		for (Map.Entry<String,String> e: pk.entrySet()) {
+			if (first) {
+				first = false;
+				sql_query += table+"." + e.getKey() + "=t1." + e.getKey();
+			} else {
+				sql_query += " and " + table+"." + e.getKey() + "=t1." + e.getKey();
+			}
+		}
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ans;
+	}
+
+
+
+
+
+
+
+
+
+
+	public ResultSet Between_Natural_join2(String table , String temporal_table, String date1, String date2) {
+		ResultSet ans = null;
+		Map<String,String> pk = db.get_primary_key(table);
+
+		ArrayList<String> a1=get_Temporal_Columns(temporal_table+"_hist");
+		Map <String,String> s1=db.get_Columns(table);
+		ArrayList <String> cols1= new ArrayList<String>();
+		for (Map.Entry<String,String> e: s1.entrySet()) {
+				cols1.add(e.getKey());
+		}
+		String sql_query= "select "+table+"."+cols1.get(0);
+		for(int i=1;i<cols1.size();i++){
+			sql_query+=" , "+cols1.get(i);
+		}
+		for(int i=0;i<a1.size();i++){
+			if(pk.get(a1.get(i)) == null){
+				sql_query+=", "+a1.get(i);
+			}
+		}
+
+		sql_query += "t1.valid_start_time as valid_start_time, "+ 
+					"t1.valid_end_time as valid_end_time from (";
+			     
+
+		sql_query += "(select * from "+ temporal_table+ " where "
+			  +  "valid_start_time " + "<= '"+ date2 + "' "
+			  +  " and ( valid_end_time " + ">= '" + date1 + "' " + " or " 
+			  +  "valid_end_time " + "is null )) as t1) ";
+
+
+		boolean first = true;
+		for (Map.Entry<String,String> e: pk.entrySet()) {
+			if (first) {
+				first = false;
+				sql_query += table+"." + e.getKey() + "=t1." + e.getKey();
+			} else {
+				sql_query += " and " + table+"." + e.getKey() + "=t1." + e.getKey();
+			}
+		}
+
+
+		try {
+			stmt = db.get_connection().prepareStatement(sql_query);
+			ans = stmt.executeQuery(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ans;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	public ResultSet History_Natural_join(String tbl1 , String tbl2) {
 		ResultSet ans = null;

@@ -27,6 +27,12 @@ class TemporalPage {
     private JButton History_btn;
     private JButton At_btn;
     private JButton Between_And_btn;
+    private JButton History_Natural_Join_btn2;
+    private JButton At_Natural_Join_btn2;
+    private JButton Bet_Natural_Join_btn2;
+    private JButton Non_temporal_natural_join;
+
+
     public TemporalPage() {
         frame = new JFrame("Temporal Operations");
         frame.setSize(400,400);
@@ -53,9 +59,16 @@ class TemporalPage {
         At_btn= new JButton("At");
         Between_And_btn= new JButton("BetweenAnd");
         Non_Temporal_Cross_Join_btn= new JButton("NonTemporalCrossJoin");
+
         History_Natural_Join_btn= new JButton("HistoryNaturalJoin");
         At_Natural_Join_btn=new JButton("AtNaturalJoin");
         Bet_Natural_Join_btn= new JButton("BetweenNaturalJoin");
+
+        History_Natural_Join_btn2= new JButton("HistoryNaturalJoin2");
+        At_Natural_Join_btn2=new JButton("AtNaturalJoin2");
+        Bet_Natural_Join_btn2= new JButton("BetweenNaturalJoin2");
+
+        Non_temporal_natural_join = new JButton("Nontemporalnaturaljoin");
         History_Cross_Join_btn = new JButton("HistoryCrossJoin");
         At_Cross_Join_btn= new JButton("AtCrossJoin");
         Bet_Cross_Join_btn = new JButton("BetweenCrossJoin");
@@ -150,7 +163,51 @@ class TemporalPage {
                Bet_Natural_Join bet_nat= new Bet_Natural_Join();
             }          
         });
+
+
+        History_Natural_Join_btn2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               History_Natural_Join2 hst_nat= new History_Natural_Join2();
+            }          
+        });
+        At_Natural_Join_btn2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               At_Natural_Join2 at_nat= new At_Natural_Join2();
+            }          
+        });
+        Bet_Natural_Join_btn2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               Bet_Natural_Join2 bet_nat= new Bet_Natural_Join2();
+            }          
+        });
+
+        History_Natural_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               History_Natural_Join hst_nat= new History_Natural_Join();
+            }          
+        });
+        At_Natural_Join_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+               At_Natural_Join at_nat= new At_Natural_Join();
+            }          
+        });
+        Non_temporal_natural_join.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // yet to be done.
+                Non_temporal_natural_join bet_nat= new Non_temporal_natural_join();
+            }          
+        });
+
+
+
+
         History_Cross_Join_btn.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                // yet to be done.
                History_Cross_Join his_cross= new History_Cross_Join();
